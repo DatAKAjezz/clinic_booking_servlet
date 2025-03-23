@@ -71,7 +71,7 @@ public final class HomePage_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                <h1>We Provide <span>Medical</span> Services That You Can <span>Trust!</span></h1>\n");
       out.write("                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sed nisl pellentesque, faucibus libero eu, gravida quam.</p>\n");
       out.write("                <div class=\"button\">\n");
-      out.write("                    <form action=\"BookAppointmentServlet\" method=\"GET\">\n");
+      out.write("                    <form id =\"form1\" action=\"BookAppointmentServlet\" method=\"GET\">\n");
       out.write("                        <button type=\"submit\" class=\"btn\">Get Appointment</button>\n");
       out.write("                    </form>\n");
       out.write("                    ");
@@ -94,6 +94,7 @@ public final class HomePage_jsp extends org.apache.jasper.runtime.HttpJspBase
                             }
                     
       out.write("\n");
+      out.write("                    \n");
       out.write("                    <form action=\"");
       out.print( dashboardUrl );
       out.write("\" method=\"GET\">\n");

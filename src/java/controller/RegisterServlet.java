@@ -1,29 +1,30 @@
-    package controller;
+package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.time.Period;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.Account;
+import model.User;
 import model.Patient;
+import dao.UserDAO;
 import dao.PatientDAO;
-import java.util.UUID;
+import java.sql.Connection;
+import utils.DBUtils;
 
 public class RegisterServlet extends HttpServlet {
 
     private final String REGISTER_PAGE = "RegisterPage.jsp";
-    private final String LOGIN_PAGE = "LoginPage.jsp";
+    private final String LOGIN_PAGE = "Login.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            // Chỉ xử lý nếu đây là một POST request và btnAction = register
             if ("POST".equalsIgnoreCase(request.getMethod()) && "register".equals(request.getParameter("btnAction"))) {
-                // Get form data
-                int id = UUID.randomUUID().hashCode() & Integer.MAX_VALUE;
                 String firstName = request.getParameter("firstName");
                 String lastName = request.getParameter("lastName");
                 String phone = request.getParameter("phone");
@@ -35,96 +36,75 @@ public class RegisterServlet extends HttpServlet {
                 String password = request.getParameter("password");
                 String url = REGISTER_PAGE;
 
-                // Debug: Print all input parameters
-                System.out.println("DEBUG - Register Servlet received parameters:");
-                System.out.println("firstName: " + firstName);
-                System.out.println("lastName: " + lastName);
-                System.out.println("username: " + username);
-                System.out.println("password: " + (password != null ? "[PROVIDED]" : "null"));
-                System.out.println("phone: " + phone);
-                System.out.println("email: " + email);
-                System.out.println("dateOfBirth: " + dateOfBirth);
-                System.out.println("sex: " + sex);
-                System.out.println("address: " + address);
-
-                // Validation - check required fields
-                if (username == null || username.trim().isEmpty()) {
-                    request.setAttribute("NOTI", "Username is required!");
-                    System.out.println("ERROR - Username is empty or null");
-                    request.getRequestDispatcher(REGISTER_PAGE).forward(request, response);
-                    return; // Stop processing
-                }
-
-                if (password == null || password.trim().isEmpty()) {
-                    request.setAttribute("NOTI", "Password is required!");
-                    System.out.println("ERROR - Password is empty or null");
+                // Validation
+                if (isEmptyOrNull(username) || isEmptyOrNull(password) || isEmptyOrNull(email) ||
+                    isEmptyOrNull(firstName) || isEmptyOrNull(lastName) || isEmptyOrNull(dateOfBirth)) {
+                    request.setAttribute("NOTI", "All fields are required!");
                     request.getRequestDispatcher(REGISTER_PAGE).forward(request, response);
                     return;
                 }
 
-                // Create auto ID
-                System.out.println("DEBUG - Generated ID: " + id);
-
-                // Create Account object with parameters validated
-                Account account = new Account();
-                account.setAccountId(id);
-                account.setUsername(username.trim());
-                account.setPassword(password.trim());
-
-                System.out.println("DEBUG - Created Account object: " + account);
-                System.out.println("DEBUG - Account values: ID=" + account.getAccountId()
-                        + ", Username=" + account.getUsername()
-                        + ", Password=" + (account.getPassword() != null ? "[PROVIDED]" : "null"));
-
-                // Create Patient object and set properties
-                Patient patient = new Patient();
-                patient.setPatientID(id);
-                patient.setFirstName(firstName != null ? firstName.trim() : "");
-                patient.setLastName(lastName != null ? lastName.trim() : "");
-                patient.setPhone(phone != null ? phone.trim() : "");
-                patient.setEmail(email != null ? email.trim() : "");
-                patient.setDateOfBirth(dateOfBirth);
-                patient.setSex(sex);
-                patient.setAddress(address != null ? address.trim() : "");
-
-                System.out.println("DEBUG - Created Patient object with values: " + patient);
-
-                // Initialize DAO to handle data persistence
-                PatientDAO patientDAO = new PatientDAO();
+                // Tính tuổi
+                int age;
                 try {
-                    System.out.println("DEBUG - Calling createPatient method");
-                    boolean result = patientDAO.createPatient(account, patient);
-                    System.out.println("DEBUG - createPatient result: " + result);
+                    LocalDate dob = LocalDate.parse(dateOfBirth);
+                    LocalDate currentDate = LocalDate.now(); // Ngày hiện tại: 2025-03-23
+                    age = Period.between(dob, currentDate).getYears();
+                    if (age < 0) {
+                        request.setAttribute("NOTI", "Invalid date of birth!");
+                        request.getRequestDispatcher(REGISTER_PAGE).forward(request, response);
+                        return;
+                    }
+                } catch (Exception e) {
+                    request.setAttribute("NOTI", "Invalid date of birth format!");
+                    request.getRequestDispatcher(REGISTER_PAGE).forward(request, response);
+                    return;
+                }
 
-                    if (result) {
-                        url = LOGIN_PAGE;
-                        request.setAttribute("NOTI", "Register Successfully!");
-                        System.out.println("SUCCESS - Registration completed");
+                // Tạo đối tượng User và Patient
+                User user = new User(0, username.trim(), password.trim(), "patient", email.trim(), phone != null ? phone.trim() : null, null);
+                Patient patient = new Patient(0, 0, firstName.trim() + " " + lastName.trim(), age, address != null ? address.trim() : null, sex);
+
+                UserDAO userDAO = new UserDAO();
+                PatientDAO patientDAO = new PatientDAO();
+
+                try (Connection conn = DBUtils.getConnection()) {
+                    conn.setAutoCommit(false); // Bắt đầu transaction
+                    int userId = userDAO.createUser(user);
+                    if (userId > 0) {
+                        patient.setUserId(userId);
+                        if (patientDAO.createPatient(patient)) { // Đổi addPatient thành createPatient
+                            conn.commit();
+                            request.setAttribute("NOTI", "Register Successfully!");
+                            url = LOGIN_PAGE;
+                        } else {
+                            conn.rollback();
+                            request.setAttribute("NOTI", "Failed to create patient profile!");
+                        }
                     } else {
-                        request.setAttribute("NOTI", "Registration failed! Please check that all fields are completed correctly and try again.");
-                        System.out.println("FAILED - Registration process returned false");
+                        conn.rollback();
+                        request.setAttribute("NOTI", "Username or email already exists!");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    System.out.println("EXCEPTION - During registration: " + e.getMessage());
-                    request.setAttribute("NOTI", "An error occurred during registration: " + e.getMessage());
+                    request.setAttribute("NOTI", "Registration failed: " + e.getMessage());
                 }
 
-                // Forward to the specified page
-                System.out.println("DEBUG - Forwarding to: " + url);
                 request.getRequestDispatcher(url).forward(request, response);
             } else {
-                // Nếu không phải POST request hoặc không phải btnAction=register, chỉ hiển thị trang đăng ký
                 request.getRequestDispatcher(REGISTER_PAGE).forward(request, response);
             }
         }
     }
 
+    private boolean isEmptyOrNull(String str) {
+        return str == null || str.trim().isEmpty();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Đối với GET request, chỉ hiển thị trang đăng ký
-        request.getRequestDispatcher(REGISTER_PAGE).forward(request, response);
+        processRequest(request, response);
     }
 
     @Override
@@ -135,6 +115,6 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Servlet for user registration";
     }
 }

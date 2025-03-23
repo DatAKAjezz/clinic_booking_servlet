@@ -1,0 +1,75 @@
+/* Giúp căn giữa cả chiều ngang và dọc */
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;                /* Dùng flexbox */
+    justify-content: center;      /* Căn giữa theo chiều ngang */
+    align-items: center;          /* Căn giữa theo chiều dọc */
+    min-height: 100vh;            /* Chiều cao tối thiểu màn hình */
+    background-color: #f7f7f7;    /* Màu nền nhẹ (tùy ý) */
+}
+
+
+
+.login-container {
+    display: inline-block;
+    background-color: #fff;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    padding: 2% 5% 5% 4%;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-bottom: 2%;
+    font-size: 2rem;
+    height: auto;
+}         
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.button {
+    padding: 10px;
+    background: linear-gradient(45deg, #9beaff 1%, #346fdb);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 106%;
+    font-size: 1rem;
+    margin-bottom: 5%;
+}
+
+.button:hover {
+    background-color: #45a049;
+}
+.message {
+    color: #FF0000;
+    font-size: 0.8rem;
+}
+
+.sign-up{
+    display: flex;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: rgb(67, 67, 195);
+}

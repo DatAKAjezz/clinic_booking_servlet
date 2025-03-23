@@ -1,0 +1,151 @@
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    /* 
+     * Xoá display: flex và height: 100vh 
+     * để cho phép cuộn trang nếu form cao hơn màn hình.
+     */
+}
+
+.notification {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    color: #333;
+    text-align: center;
+}
+
+.notification p {
+    margin: 0;
+}
+.required{
+    color: red;
+    padding-right: .5rem;
+}
+/* Container cho form đăng ký */
+.register-container {
+    width: 100%;
+    max-width: 450px;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 40px auto; /* Căn giữa theo chiều ngang, chừa khoảng cách trên/dưới */
+}
+
+/* Tiêu đề */
+.title {
+    margin-bottom: 5px;
+}
+
+.create-account {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.login-here {
+    font-size: 0.9rem;
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.login-here:hover {
+    text-decoration: underline;
+}
+
+/* Vùng chứa form */
+.section {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.section-title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.required-text {
+    font-size: 12px;
+    color: red;
+    margin-bottom: 10px;
+}
+
+/* Group input */
+.input-group {
+    margin-bottom: 1rem;
+}
+
+.input-group label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    display: flex;
+    margin-bottom: 5px;
+    padding-right: 3rem;
+}
+
+/* Sửa lỗi class: .gender-group thay vì .gender -group */
+.gender-group {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-self: center;
+}
+
+.input-group input {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.password-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.password-wrapper button {
+    position: absolute;
+    right: 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.small-text {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.register-btn {
+    width: 100%;
+    padding: 12px;
+    background: #346fdb;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: background 0.3s;
+}
+
+.register-btn:hover {
+    background: #214c9a;
+}

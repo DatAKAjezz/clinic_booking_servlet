@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <servlet>
+        <servlet-name>MainServlet</servlet-name>
+        <servlet-class>controller.MainServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StaffDashboardServlet</servlet-name>
+        <servlet-class>controller.StaffDashboardServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ReviewServlet</servlet-name>
+        <servlet-class>controller.ReviewServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DoctorListServlet</servlet-name>
+        <servlet-class>controller.DoctorListServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProfileServlet</servlet-name>
+        <servlet-class>controller.UpdateProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MainServlet</servlet-name>
+        <url-pattern>/MainServlet</url-pattern>
+    </servlet-mapping>
+    <!-- PatientDashboardServlet -->
+    <servlet>
+        <servlet-name>PatientDashboardServlet</servlet-name>
+        <servlet-class>controller.PatientDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PatientDashboardServlet</servlet-name>
+        <url-pattern>/PatientDashboardServlet</url-pattern>
+    </servlet-mapping>
+    <!-- BookAppointmentServlet -->
+    <servlet>
+        <servlet-name>BookAppointmentServlet</servlet-name>
+        <servlet-class>controller.BookAppointmentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BookAppointmentServlet</servlet-name>
+        <url-pattern>/BookAppointmentServlet</url-pattern>
+    </servlet-mapping>
+    <!-- DoctorDashboardServlet -->
+    <servlet>
+        <servlet-name>DoctorDashboardServlet</servlet-name>
+        <servlet-class>controller.DoctorDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DoctorDashboardServlet</servlet-name>
+        <url-pattern>/DoctorDashboardServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>MedicalHistoryServlet</servlet-name>
+        <servlet-class>controller.MedicalHistoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MedicalHistoryServlet</servlet-name>
+        <url-pattern>/MedicalHistoryServlet</url-pattern>
+    </servlet-mapping>
+    <!-- Welcome file -->
+    <welcome-file-list>
+        <welcome-file>HomePage.jsp</welcome-file>
+    </welcome-file-list>
+    <servlet-mapping>
+        <servlet-name>StaffDashboardServlet</servlet-name>
+        <url-pattern>/StaffDashboardServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UpdateProfileServlet</servlet-name>
+        <servlet-class>controller.UpdateProfileServlet</servlet-class>
+        <multipart-config>
+            <!-- Bỏ <location> để dùng mặc định -->
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>5242880</max-request-size>
+            <file-size-threshold>0</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateProfileServlet</servlet-name>
+        <url-pattern>/UpdateProfileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReviewServlet</servlet-name>
+        <url-pattern>/ReviewServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DoctorListServlet</servlet-name>
+        <url-pattern>/DoctorListServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProfileServlet</servlet-name>
+        <url-pattern>/ProfileServlet</url-pattern>
+    </servlet-mapping>
+    
+
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+</web-app>

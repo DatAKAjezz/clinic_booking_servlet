@@ -18,7 +18,7 @@
             <div class="profile-email">${sessionScope.USER.email}</div>
             <form action="MainServlet" method="post">
                 <input type="hidden" name="btnAction" value="logout"/>
-                <button type="submit" class="logout-btn">Log out</button>
+                <a href="MainServlet?btnAction=logout" class="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout</a>
             </form>
         </div>
         <div class="menu">

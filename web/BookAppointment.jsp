@@ -126,72 +126,64 @@
         <jsp:include page="header.jsp" />
         <div class="form-container">
             <h2 class="form-title">Book an Appointment</h2>
-            <c:choose>
-                <c:when test="${empty sessionScope.USER}">
-                    <div class="message error">
-                        <p>You need to log in to book an appointment.</p>
-                        <a href="LoginPage.jsp" class="login-button">Log In</a>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <div class="patient-info">
-                        <h3>Patient Information</h3>
-                        <p class="input-label"><strong>Username:</strong> ${sessionScope.USER.username}</p>
-                        <div class="input-label">
-                            <label>Email:</label>
-                            <input type="text" value="${sessionScope.USER.email}" readonly />
-                        </div>
-                        <div class="input-label">
-                            <label>Phone Number:</label>
-                            <input type="text" value="${sessionScope.USER.phone}" readonly />
-                        </div>
-                    </div>
 
-                    <form action="BookAppointmentServlet" method="POST">
-                        <div class="form-group">
-                            <label for="doctorId">Select Doctor:</label>
-                            <select name="doctorId" id="doctorId" required>
-                                <option value="">Select Doctor</option>
-                                <c:forEach var="doctor" items="${doctors}">
-                                    <option value="${doctor.doctorId}">${doctor.fullName} - ${doctor.specialty}</option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="scheduleId">Select Schedule:</label>
-                            <select name="scheduleId" id="scheduleId" required>
-                                <option value="">Select Schedule</option>
-                                <c:forEach var="schedule" items="${schedules}">
-                                    <option value="${schedule.scheduleId}">${schedule.date} ${schedule.startTime} - ${schedule.endTime}</option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="serviceId">Select Service:</label>
-                            <select name="serviceId" id="serviceId" required>
-                                <option value="">Select Service</option>
-                                <c:forEach var="service" items="${services}">
-                                    <option value="${service.serviceId}">${service.name} - ${service.price}</option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="appointmentDate">Select Date:</label>
-                            <input type="date" id="appointmentDate" name="appointmentDate" required 
-                                   min="<%= new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date())%>"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="time">Select Time:</label>
-                            <input type="time" id="time" name="time" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="reason">Reason for Visit:</label>
-                            <input type="text" id="reason" name="reason" placeholder="Enter reason" required />
-                        </div>
-                        <button type="submit">Book Appointment</button>
-                    </form>
-                </c:otherwise>
-            </c:choose>
+            <div class="patient-info">
+                <h3>Patient Information</h3>
+                <p class="input-label"><strong>Username:</strong> ${sessionScope.USER.username}</p>
+                <div class="input-label">
+                    <label>Email:</label>
+                    <input type="text" value="${sessionScope.USER.email}" readonly />
+                </div>
+                <div class="input-label">
+                    <label>Phone Number:</label>
+                    <input type="text" value="${sessionScope.USER.phone}" readonly />
+                </div>
+            </div>
+
+            <form action="BookAppointmentServlet" method="POST">
+                <div class="form-group">
+                    <label for="doctorId">Select Doctor:</label>
+                    <select name="doctorId" id="doctorId" required>
+                        <option value="">Select Doctor</option>
+                        <c:forEach var="doctor" items="${doctors}">
+                            <option value="${doctor.doctorId}">${doctor.fullName} - ${doctor.specialty}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="scheduleId">Select Schedule:</label>
+                    <select name="scheduleId" id="scheduleId" required>
+                        <option value="">Select Schedule</option>
+                        <c:forEach var="schedule" items="${schedules}">
+                            <option value="${schedule.scheduleId}">${schedule.date} ${schedule.startTime} - ${schedule.endTime}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="serviceId">Select Service:</label>
+                    <select name="serviceId" id="serviceId" required>
+                        <option value="">Select Service</option>
+                        <c:forEach var="service" items="${services}">
+                            <option value="${service.serviceId}">${service.name} - ${service.price}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointmentDate">Select Date:</label>
+                    <input type="date" id="appointmentDate" name="appointmentDate" required 
+                           min="<%= new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date())%>"/>
+                </div>
+                <div class="form-group">
+                    <label for="time">Select Time:</label>
+                    <input type="time" id="time" name="time" required/>
+                </div>
+                <div class="form-group">
+                    <label for="reason">Reason for Visit:</label>
+                    <input type="text" id="reason" name="reason" placeholder="Enter reason" required />
+                </div>
+                <button type="submit">Book Appointment</button>
+            </form>
+
             <c:if test="${not empty message}">
                 <div class="message success">${message}</div>
             </c:if>

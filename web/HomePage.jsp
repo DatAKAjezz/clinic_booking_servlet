@@ -12,16 +12,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Home Page</title>
-        <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/header.css"/>
-
-        <link rel="stylesheet" href="<%= request.getContextPath()%>/styles/HomePage.css"/>
-
-        <style>
-            body {
-                background-color: green !important;
-            }
-        </style>
-
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/HomePage.css"/>
     </head>
     <body>
         <jsp:include page="header.jsp" />
@@ -32,7 +23,7 @@
                 <img src="<%= request.getContextPath()%>/img/slider.jpg" alt="Medical Services" class="banner-img">
                 <div class="banner-text">
                     <h1>We Provide <span>Medical</span> Services That You Can <span>Trust!</span></h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sed nisl pellentesque, faucibus libero eu, gravida quam.</p>
+                    <!--<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sed nisl pellentesque, faucibus libero eu, gravida quam.</p>-->
                     <div class="button">
                         <form id ="form1" action="BookAppointmentServlet" method="GET">
                             <button type="submit" class="btn">Get Appointment</button>

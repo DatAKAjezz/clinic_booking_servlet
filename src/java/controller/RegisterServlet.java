@@ -35,6 +35,7 @@ public class RegisterServlet extends HttpServlet {
                 String username = request.getParameter("username");
                 String password = request.getParameter("password");
                 String url = REGISTER_PAGE;
+                
 
                 // Validation
                 if (isEmptyOrNull(username) || isEmptyOrNull(password) || isEmptyOrNull(email) ||

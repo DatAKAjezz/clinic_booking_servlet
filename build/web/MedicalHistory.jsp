@@ -43,7 +43,7 @@
         </div>
         <div class="menu">
             <a href="HomePage.jsp" class="menu-item"><span class="menu-icon"><i class="bi bi-house"></i></span>Home</a>
-            <a href="DoctorDashboardServlet" class="menu-item"><span class="menu-icon"><i class="bi bi-calendar"></i></span>My Appointments</a>
+            <a href="PatientDashboardServlet" class="menu-item"><span class="menu-icon"><i class="bi bi-calendar"></i></span>My Appointments</a>
             <a href="MedicalHistoryServlet" class="menu-item active"><span class="menu-icon"><i class="bi bi-file-medical"></i></span>Patient Records</a>
             <a href="Profile.jsp" class="menu-item"><span class="menu-icon"><i class="bi bi-person"></i></span>Profile</a>
         </div>

@@ -63,11 +63,19 @@ public class BookAppointmentServlet extends HttpServlet {
         int scheduleId = Integer.parseInt(request.getParameter("scheduleId"));
         int serviceId = Integer.parseInt(request.getParameter("serviceId"));
         Date appointmentDate = Date.valueOf(request.getParameter("appointmentDate"));
-        Time appointmentTime = Time.valueOf(request.getParameter("appointmentTime"));
+
+        String timeStr = request.getParameter("time");
+        Time appointmentTime = null;
+        if (timeStr != null && !timeStr.isEmpty()){
+            timeStr = timeStr + ":00";
+            appointmentTime = Time.valueOf(timeStr);
+            
+        }
+
         String reason = request.getParameter("reason");
 
         Appointment appointment = new Appointment(
-            0, // appointment_id tự sinh
+            0,
             patientId,
             doctorId,
             scheduleId,
@@ -75,7 +83,7 @@ public class BookAppointmentServlet extends HttpServlet {
             appointmentDate,
             appointmentTime,
             reason,
-            "pending" // Trạng thái ban đầu
+            "pending"
         );
 
         if (appointmentService.bookAppointment(appointment)) {

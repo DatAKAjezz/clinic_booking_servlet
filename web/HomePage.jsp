@@ -13,6 +13,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Home Page</title>
         <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/HomePage.css"/>
+        <!-- Thêm EmailJS SDK -->
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+        <script type="text/javascript">
+            (function() {
+                // Khởi tạo EmailJS với Public Key của bạn
+                emailjs.init("YOUR_PUBLIC_KEY"); // Thay YOUR_PUBLIC_KEY bằng Public Key từ EmailJS
+            })();
+        </script>
     </head>
     <body>
         <jsp:include page="header.jsp" />
@@ -23,9 +31,8 @@
                 <img src="<%= request.getContextPath()%>/img/slider.jpg" alt="Medical Services" class="banner-img">
                 <div class="banner-text">
                     <h1>We Provide <span>Medical</span> Services That You Can <span>Trust!</span></h1>
-                    <!--<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sed nisl pellentesque, faucibus libero eu, gravida quam.</p>-->
                     <div class="button">
-                        <form id ="form1" action="BookAppointmentServlet" method="GET">
+                        <form id="form1" action="BookAppointmentServlet" method="GET">
                             <button type="submit" class="btn">Get Appointment</button>
                         </form>
                         <%
@@ -46,7 +53,6 @@
                                         dashboardUrl = "HomePage.jsp";
                                 }
                         %>
-
                         <form action="<%= dashboardUrl%>" method="GET">
                             <button type="submit" class="btn primary">Go to Dashboard</button>
                         </form>
@@ -57,7 +63,6 @@
                 </div>
             </div>
         </section>
-        <!--/ End Banner Image -->
 
         <!-- Info Cards Section -->
         <section class="info-cards">
@@ -72,10 +77,9 @@
                         </svg>
                     </a>
                 </div>
-
                 <div class="info-card">
                     <h2 class="card-title">Schedule</h2>
-                    <p class="card-text">Lorem ipsum sit amet consectetur adipiscing elit. Vivamus et erat in lacus convallis sodales.</p>
+                    <p class="card-text">Lorem ipsum sit amet consectetur adipiscing elit.</p>
                     <a href="#" class="card-link">LEARN MORE 
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -83,22 +87,12 @@
                         </svg>
                     </a>
                 </div>
-
                 <div class="info-card">
                     <h2 class="card-title">Medical History</h2>
                     <table class="hours-table">
-                        <tr>
-                            <td>Monday - Friday</td>
-                            <td>8.00-20.00</td>
-                        </tr>
-                        <tr>
-                            <td>Saturday</td>
-                            <td>9.00-18.30</td>
-                        </tr>
-                        <tr>
-                            <td>Monday - Thursday</td>
-                            <td>9.00-15.00</td>
-                        </tr>
+                        <tr><td>Monday - Friday</td><td>8.00-20.00</td></tr>
+                        <tr><td>Saturday</td><td>9.00-18.30</td></tr>
+                        <tr><td>Monday - Thursday</td><td>9.00-15.00</td></tr>
                     </table>
                     <a href="#" class="card-link">LEARN MORE 
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -119,22 +113,12 @@
                             <span class="subtitle">About Us</span>
                             <h2>We Are Always Ready To Help You & Your Family</h2>
                         </div>
-                        <p>At our core, we are committed to providing exceptional care and support for you and your loved ones. Our dedicated team works tirelessly to ensure your health and well-being are always our top priorities.
-                        </p>
-                        <p>With compassion and expertise, we strive to make every visit a positive experience. Your trust drives us to deliver the best service possible.</p>
+                        <p>At our core, we are committed to providing exceptional care and support for you and your loved ones.</p>
+                        <p>With compassion and expertise, we strive to make every visit a positive experience.</p>
                         <div class="stats-row">
-                            <div class="stat-item">
-                                <h3>99%</h3>
-                                <p>Patient Satisfaction</p>
-                            </div>
-                            <div class="stat-item">
-                                <h3>15+</h3>
-                                <p>Years of Experience</p>
-                            </div>
-                            <div class="stat-item">
-                                <h3>50+</h3>
-                                <p>Qualified Doctors</p>
-                            </div>
+                            <div class="stat-item"><h3>99%</h3><p>Patient Satisfaction</p></div>
+                            <div class="stat-item"><h3>15+</h3><p>Years of Experience</p></div>
+                            <div class="stat-item"><h3>50+</h3><p>Qualified Doctors</p></div>
                         </div>
                         <a href="#" class="btn">Learn More</a>
                     </div>
@@ -142,6 +126,33 @@
                         <img src="<%= request.getContextPath()%>/img/slider3.jpg" alt="Our Medical Team">
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Contact Us Section -->
+        <section class="contact-section">
+            <div class="container">
+                <div class="section-header text-center">
+                    <span class="subtitle">Contact Us</span>
+                    <h2>Get In Touch</h2>
+                    <p>Send us a message and we'll get back to you as soon as possible!</p>
+                </div>
+                <form id="contactForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+                <div id="formMessage" style="margin-top: 20px; text-align: center;"></div>
             </div>
         </section>
 
@@ -153,28 +164,19 @@
                     <h2>What We Provide</h2>
                     <p>We provide quality healthcare services for you and your family</p>
                 </div>
-
                 <div class="services-grid">
                     <div class="service-card">
-                        <div class="service-icon">
-                            <img src="<%= request.getContextPath()%>/img/icons/cardiology.png" alt="Cardiology">
-                        </div>
+                        <div class="service-icon"><img src="<%= request.getContextPath()%>/img/icons/cardiology.png" alt="Cardiology"></div>
                         <h3>Cardiology</h3>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                     </div>
-
                     <div class="service-card">
-                        <div class="service-icon">
-                            <img src="<%= request.getContextPath()%>/img/icons/laboratory.png" alt="Laboratory">
-                        </div>
+                        <div class="service-icon"><img src="<%= request.getContextPath()%>/img/icons/laboratory.png" alt="Laboratory"></div>
                         <h3>Laboratory</h3>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                     </div>
-
                     <div class="service-card">
-                        <div class="service-icon">
-                            <img src="<%= request.getContextPath()%>/img/icons/emergency.png" alt="Emergency">
-                        </div>
+                        <div class="service-icon"><img src="<%= request.getContextPath()%>/img/icons/emergency.png" alt="Emergency"></div>
                         <h3>Emergency</h3>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                     </div>
@@ -189,31 +191,19 @@
                     <span class="subtitle">Testimonials</span>
                     <h2>What Our Patients Say</h2>
                 </div>
-
                 <div class="testimonials-slider">
                     <div class="testimonial-card">
-                        <div class="testimonial-content">
-                            <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus magna justo."</p>
-                        </div>
+                        <div class="testimonial-content"><p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</p></div>
                         <div class="testimonial-author">
                             <img src="<%= request.getContextPath()%>/img/patient.jpg" alt="Patient">
-                            <div class="author-info">
-                                <h4>John Doe</h4>
-                                <p>Cardiology Patient</p>
-                            </div>
+                            <div class="author-info"><h4>John Doe</h4><p>Cardiology Patient</p></div>
                         </div>
                     </div>
-
                     <div class="testimonial-card">
-                        <div class="testimonial-content">
-                            <p>"Proin eget tortor risus. Curabitur non nulla sit amet nisl tempus."</p>
-                        </div>
+                        <div class="testimonial-content"><p>"Proin eget tortor risus. Curabitur non nulla sit amet."</p></div>
                         <div class="testimonial-author">
                             <img src="<%= request.getContextPath()%>/img/patient2.jpg" alt="Patient">
-                            <div class="author-info">
-                                <h4>Jane Smith</h4>
-                                <p>Dental Patient</p>
-                            </div>
+                            <div class="author-info"><h4>Jane Smith</h4><p>Dental Patient</p></div>
                         </div>
                     </div>
                 </div>
@@ -221,5 +211,25 @@
         </section>
 
         <jsp:include page="footer.jsp" />
+
+        <script type="text/javascript">
+            document.getElementById('contactForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    message: document.getElementById('message').value
+                };
+
+                emailjs.send('service_2m13k58', 'template_zjktp9u', formData)
+                    .then(function(response) {
+                        document.getElementById('formMessage').innerHTML = '<p style="color: green;">Message sent successfully!</p>';
+                        document.getElementById('contactForm').reset();
+                    }, function(error) {
+                        document.getElementById('formMessage').innerHTML = '<p style="color: red;">Failed to send message. Please try again.</p>';
+                    });
+            });
+        </script>
     </body>
 </html>

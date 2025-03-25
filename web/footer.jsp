@@ -127,14 +127,7 @@
                 </div>
 
                 <!-- Contact Us -->
-                <div class="footer-section">
-                    <h1>Contact Us</h1>
-                    <form class="email-form">
-                        <input type="email" placeholder="Email" required />
-                        <input type="text" placeholder="Message" required />
-                        <button type="submit">Send</button>
-                    </form>
-                </div>
+
             </div>
 
         </footer>

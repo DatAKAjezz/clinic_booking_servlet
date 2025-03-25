@@ -1,11 +1,10 @@
 package model;
 
 import java.sql.Date;
-import java.sql.Time;
 
 public class Appointment {
     private int appointmentId;
-    private int patientId;
+    private Integer patientId; // Đổi thành Integer để hỗ trợ NULL
     private int doctorId;
     private int scheduleId;
     private int serviceId;
@@ -15,11 +14,13 @@ public class Appointment {
     private String patientName;
     private String doctorName;
     private String serviceName;
-    private String note; // Thêm thuộc tính note
+    private String note;
+    private String guestName; // Thêm cho khách vãng lai
+    private String guestPhone; // Thêm cho khách vãng lai
 
-    // Constructor cho BookAppointmentServlet (9 tham số)
-    public Appointment(int appointmentId, int patientId, int doctorId, int scheduleId, int serviceId,
-                       Date appointmentDate, String reason, String status) {
+    // Constructor cho BookAppointmentServlet (8 tham số cơ bản + guestName, guestPhone)
+    public Appointment(int appointmentId, Integer patientId, int doctorId, int scheduleId, int serviceId,
+                       Date appointmentDate, String reason, String status, String guestName, String guestPhone) {
         this.appointmentId = appointmentId;
         this.patientId = patientId;
         this.doctorId = doctorId;
@@ -28,39 +29,27 @@ public class Appointment {
         this.appointmentDate = appointmentDate;
         this.reason = reason;
         this.status = status;
-        this.patientName = null;
-        this.doctorName = null;
-        this.serviceName = null;
-        this.note = null;
+        this.guestName = guestName;
+        this.guestPhone = guestPhone;
     }
 
-    // Constructor đầy đủ (13 tham số)
-    public Appointment(int appointmentId, int patientId, int doctorId, int scheduleId, int serviceId,
+    // Constructor đầy đủ (14 tham số)
+    public Appointment(int appointmentId, Integer patientId, int doctorId, int scheduleId, int serviceId,
                        Date appointmentDate, String reason, String status,
-                       String patientName, String doctorName, String serviceName, String note) {
-        this(appointmentId, patientId, doctorId, scheduleId, serviceId, appointmentDate, 
-              reason, status);
+                       String patientName, String doctorName, String serviceName, String note,
+                       String guestName, String guestPhone) {
+        this(appointmentId, patientId, doctorId, scheduleId, serviceId, appointmentDate, reason, status, guestName, guestPhone);
         this.patientName = patientName;
         this.doctorName = doctorName;
         this.serviceName = serviceName;
         this.note = note;
     }
 
-    // Constructor cũ (10 tham số)
-    public Appointment(int appointmentId, int patientId, int doctorId, int scheduleId, int serviceId,
-                       Date appointmentDate, String reason, String status,
-                       String name, String serviceName) {
-        this(appointmentId, patientId, doctorId, scheduleId, serviceId, appointmentDate, 
-             reason, status);
-        this.doctorName = name;
-        this.serviceName = serviceName;
-    }
-
-    // Getters and Setters
+    // Getters và Setters
     public int getAppointmentId() { return appointmentId; }
     public void setAppointmentId(int appointmentId) { this.appointmentId = appointmentId; }
-    public int getPatientId() { return patientId; }
-    public void setPatientId(int patientId) { this.patientId = patientId; }
+    public Integer getPatientId() { return patientId; }
+    public void setPatientId(Integer patientId) { this.patientId = patientId; }
     public int getDoctorId() { return doctorId; }
     public void setDoctorId(int doctorId) { this.doctorId = doctorId; }
     public int getScheduleId() { return scheduleId; }
@@ -81,4 +70,8 @@ public class Appointment {
     public void setServiceName(String serviceName) { this.serviceName = serviceName; }
     public String getNote() { return note; }
     public void setNote(String note) { this.note = note; }
+    public String getGuestName() { return guestName; }
+    public void setGuestName(String guestName) { this.guestName = guestName; }
+    public String getGuestPhone() { return guestPhone; }
+    public void setGuestPhone(String guestPhone) { this.guestPhone = guestPhone; }
 }

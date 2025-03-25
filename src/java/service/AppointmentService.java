@@ -2,23 +2,32 @@ package service;
 
 import dao.AppointmentDAO;
 import model.Appointment;
+import java.sql.SQLException;
 import java.util.List;
 import java.sql.Date;
 
 public class AppointmentService {
     private AppointmentDAO appointmentDAO = new AppointmentDAO();
 
-    // Các phương thức hiện có giữ nguyên...
+    public boolean bookAppointment(Appointment appointment) throws SQLException, ClassNotFoundException {
+        return appointmentDAO.bookAppointment(appointment);
+    }
+
+    public boolean updateAppointment(Appointment appointment) {
+        return appointmentDAO.updateAppointment(appointment); // Thêm phương thức mới
+    }
+
+    public Appointment getAppointmentById(int appointmentId) {
+        return appointmentDAO.getAppointmentById(appointmentId); // Thêm phương thức mới
+    }
+
+    // Các phương thức hiện có giữ nguyên
     public boolean isScheduleBooked(int scheduleId, Date appointmentDate) {
         return appointmentDAO.isScheduleBooked(scheduleId, appointmentDate);
     }
 
     public List<Appointment> getBookingsByPatientId(int patientId) {
         return appointmentDAO.getBookingsByPatientId(patientId);
-    }
-
-    public boolean bookAppointment(Appointment appointment) {
-        return appointmentDAO.bookAppointment(appointment);
     }
 
     public List<Appointment> getAppointmentsByDoctorId(int doctorId, String statusFilter, String searchPatient, int page, int pageSize) {
@@ -57,7 +66,6 @@ public class AppointmentService {
         return appointmentDAO.completeAppointment(appointmentId, note);
     }
 
-    // Thêm hai phương thức mới cho lịch khám theo ngày
     public List<Appointment> getAppointmentsByDoctorIdAndDate(int doctorId, String date, String statusFilter, String searchPatient, int page, int pageSize) {
         return appointmentDAO.getAppointmentsByDoctorIdAndDate(doctorId, date, statusFilter, searchPatient, page, pageSize);
     }
@@ -73,5 +81,4 @@ public class AppointmentService {
     public int getAllAppointmentsCountByDate(String date, String statusFilter, String searchPatient, String searchDoctor) {
         return appointmentDAO.getAllAppointmentsCountByDate(date, statusFilter, searchPatient, searchDoctor);
     }
-    
 }

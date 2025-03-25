@@ -51,7 +51,7 @@ public class BookAppointmentServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8"); // Đảm bảo xử lý tiếng Việt từ form
+        request.setCharacterEncoding("UTF-8");
         User user = (User) request.getSession().getAttribute("USER");
         if (user == null || !"patient".equals(user.getRole())) {
             response.sendRedirect("LoginPage.jsp");
@@ -137,7 +137,9 @@ public class BookAppointmentServlet extends HttpServlet {
                     serviceId,
                     appointmentDate,
                     reason,
-                    "pending"
+                    "pending",
+                    null, // guestName
+                    null  // guestPhone
             );
 
             if (appointmentService.bookAppointment(appointment)) {

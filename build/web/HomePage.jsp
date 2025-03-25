@@ -64,8 +64,8 @@
             <div class="container">
                 <div class="info-card">
                     <h2 class="card-title">Our Doctor</h2>
-                    <p class="card-text">Lorem ipsum sit amet consectetur adipiscing elit. Vivamus et erat in lacus convallis sodales.</p>
-                    <a href="#" class="card-link">LEARN MORE 
+                    <p class="card-text">We have dozen of seasoned and experienced doctors.</p>
+                    <a href="DoctorListServlet" class="card-link">LEARN MORE 
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                         <polyline points="12 5 19 12 12 19"></polyline>
@@ -119,8 +119,9 @@
                             <span class="subtitle">About Us</span>
                             <h2>We Are Always Ready To Help You & Your Family</h2>
                         </div>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sollicitudin molestie malesuada. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.</p>
-                        <p>Vivamus suscipit tortor eget felis porttitor volutpat. Sed porttitor lectus nibh.</p>
+                        <p>At our core, we are committed to providing exceptional care and support for you and your loved ones. Our dedicated team works tirelessly to ensure your health and well-being are always our top priorities.
+                        </p>
+                        <p>With compassion and expertise, we strive to make every visit a positive experience. Your trust drives us to deliver the best service possible.</p>
                         <div class="stats-row">
                             <div class="stat-item">
                                 <h3>99%</h3>

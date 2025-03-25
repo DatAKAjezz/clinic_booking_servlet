@@ -10,7 +10,6 @@ public class Appointment {
     private int scheduleId;
     private int serviceId;
     private Date appointmentDate;
-    private Time appointmentTime;
     private String reason;
     private String status;
     private String patientName;
@@ -20,14 +19,13 @@ public class Appointment {
 
     // Constructor cho BookAppointmentServlet (9 tham số)
     public Appointment(int appointmentId, int patientId, int doctorId, int scheduleId, int serviceId,
-                       Date appointmentDate, Time appointmentTime, String reason, String status) {
+                       Date appointmentDate, String reason, String status) {
         this.appointmentId = appointmentId;
         this.patientId = patientId;
         this.doctorId = doctorId;
         this.scheduleId = scheduleId;
         this.serviceId = serviceId;
         this.appointmentDate = appointmentDate;
-        this.appointmentTime = appointmentTime;
         this.reason = reason;
         this.status = status;
         this.patientName = null;
@@ -38,10 +36,10 @@ public class Appointment {
 
     // Constructor đầy đủ (13 tham số)
     public Appointment(int appointmentId, int patientId, int doctorId, int scheduleId, int serviceId,
-                       Date appointmentDate, Time appointmentTime, String reason, String status,
+                       Date appointmentDate, String reason, String status,
                        String patientName, String doctorName, String serviceName, String note) {
         this(appointmentId, patientId, doctorId, scheduleId, serviceId, appointmentDate, 
-             appointmentTime, reason, status);
+              reason, status);
         this.patientName = patientName;
         this.doctorName = doctorName;
         this.serviceName = serviceName;
@@ -50,10 +48,10 @@ public class Appointment {
 
     // Constructor cũ (10 tham số)
     public Appointment(int appointmentId, int patientId, int doctorId, int scheduleId, int serviceId,
-                       Date appointmentDate, Time appointmentTime, String reason, String status,
+                       Date appointmentDate, String reason, String status,
                        String name, String serviceName) {
         this(appointmentId, patientId, doctorId, scheduleId, serviceId, appointmentDate, 
-             appointmentTime, reason, status);
+             reason, status);
         this.doctorName = name;
         this.serviceName = serviceName;
     }
@@ -71,8 +69,6 @@ public class Appointment {
     public void setServiceId(int serviceId) { this.serviceId = serviceId; }
     public Date getAppointmentDate() { return appointmentDate; }
     public void setAppointmentDate(Date appointmentDate) { this.appointmentDate = appointmentDate; }
-    public Time getAppointmentTime() { return appointmentTime; }
-    public void setAppointmentTime(Time appointmentTime) { this.appointmentTime = appointmentTime; }
     public String getReason() { return reason; }
     public void setReason(String reason) { this.reason = reason; }
     public String getStatus() { return status; }

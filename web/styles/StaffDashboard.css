@@ -471,3 +471,52 @@ body {
         align-items: flex-start;
     }
 }
+
+.text-warning {
+    color: #d97706;
+}
+
+.text-primary {
+    color: #2563eb;
+}
+
+.text-success {
+    color: #16a34a;
+}
+
+.text-danger {
+    color: #dc2626;
+}
+.info-text{
+    font-weight: bold;
+}
+
+.today-btn {
+    background-color: #10b981;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+    transition: background-color 0.3s;
+}
+
+.today-btn:hover {
+    background-color: #059669;
+}
+
+#dateFilter {
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+#dateFilter:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}

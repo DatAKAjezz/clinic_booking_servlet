@@ -1,22 +1,19 @@
 package model;
 
-import java.sql.Date;
 import java.sql.Time;
 
 public class Schedule {
     private int scheduleId;   // schedule_id
     private int doctorId;     // doctor_id
-    private Date date;        // date
     private Time startTime;   // start_time
     private Time endTime;     // end_time
     private String status;    // status (available, booked, unavailable)
 
     public Schedule() {}
 
-    public Schedule(int scheduleId, int doctorId, Date date, Time startTime, Time endTime, String status) {
+    public Schedule(int scheduleId, int doctorId, Time startTime, Time endTime, String status) {
         this.scheduleId = scheduleId;
         this.doctorId = doctorId;
-        this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
         this.status = status;
@@ -27,8 +24,6 @@ public class Schedule {
     public void setScheduleId(int scheduleId) { this.scheduleId = scheduleId; }
     public int getDoctorId() { return doctorId; }
     public void setDoctorId(int doctorId) { this.doctorId = doctorId; }
-    public Date getDate() { return date; }
-    public void setDate(Date date) { this.date = date; }
     public Time getStartTime() { return startTime; }
     public void setStartTime(Time startTime) { this.startTime = startTime; }
     public Time getEndTime() { return endTime; }
@@ -41,7 +36,6 @@ public class Schedule {
         return "Schedule{" +
                 "scheduleId=" + scheduleId +
                 ", doctorId=" + doctorId +
-                ", date=" + date +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", status='" + status + '\'' +

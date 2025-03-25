@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class StaffDashboardServlet extends HttpServlet {
@@ -23,9 +24,13 @@ public class StaffDashboardServlet extends HttpServlet {
             return;
         }
 
+        // Lấy thông tin lọc và phân trang
         String statusFilter = request.getParameter("statusFilter");
         String searchPatient = request.getParameter("searchPatient");
         String searchDoctor = request.getParameter("searchDoctor");
+        String todayParam = request.getParameter("today");
+        String dateFilter = request.getParameter("dateFilter");
+        boolean showToday = "true".equals(todayParam);
         int page = 1;
         try {
             page = Integer.parseInt(request.getParameter("page"));
@@ -34,8 +39,28 @@ public class StaffDashboardServlet extends HttpServlet {
         }
         if (page < 1) page = 1;
 
-        List<Appointment> appointments = appointmentService.getAllAppointments(statusFilter, searchPatient, searchDoctor, page, PAGE_SIZE);
-        int totalAppointments = appointmentService.getAllAppointmentsCount(statusFilter, searchPatient, searchDoctor);
+        List<Appointment> appointments;
+        int totalAppointments;
+
+        if (showToday) {
+            LocalDate today = LocalDate.now(); // 2025-03-25
+            appointments = appointmentService.getAllAppointmentsByDate(
+                today.toString(), statusFilter, searchPatient, searchDoctor, page, PAGE_SIZE);
+            totalAppointments = appointmentService.getAllAppointmentsCountByDate(
+                today.toString(), statusFilter, searchPatient, searchDoctor);
+            request.setAttribute("showingToday", true);
+        } else if (dateFilter != null && !dateFilter.isEmpty()) {
+            appointments = appointmentService.getAllAppointmentsByDate(
+                dateFilter, statusFilter, searchPatient, searchDoctor, page, PAGE_SIZE);
+            totalAppointments = appointmentService.getAllAppointmentsCountByDate(
+                dateFilter, statusFilter, searchPatient, searchDoctor);
+        } else {
+            appointments = appointmentService.getAllAppointments(
+                statusFilter, searchPatient, searchDoctor, page, PAGE_SIZE);
+            totalAppointments = appointmentService.getAllAppointmentsCount(
+                statusFilter, searchPatient, searchDoctor);
+        }
+
         int totalPages = (int) Math.ceil((double) totalAppointments / PAGE_SIZE);
         if (page > totalPages && totalPages > 0) page = totalPages;
 
@@ -59,36 +84,27 @@ public class StaffDashboardServlet extends HttpServlet {
         try {
             appointmentId = Integer.parseInt(request.getParameter("appointmentId"));
         } catch (NumberFormatException e) {
-            request.getSession().setAttribute("error", "Invalid appointment ID.");
+            request.getSession().setAttribute("error", "ID lịch hẹn không hợp lệ.");
             response.sendRedirect("StaffDashboardServlet");
             return;
         }
 
         if ("confirm".equals(action)) {
             if (appointmentService.confirmAppointment(appointmentId)) {
-                request.getSession().setAttribute("message", "Appointment confirmed successfully!");
+                request.getSession().setAttribute("message", "Xác nhận lịch hẹn thành công!");
             } else {
-                request.getSession().setAttribute("error", "Failed to confirm appointment.");
+                request.getSession().setAttribute("error", "Không thể xác nhận lịch hẹn.");
             }
         } else if ("cancel".equals(action)) {
             int scheduleId = appointmentService.getScheduleIdByAppointmentId(appointmentId);
             if (appointmentService.cancelAppointment(appointmentId)) {
                 if (scheduleId != -1 && new service.ScheduleService().updateScheduleStatus(scheduleId, "available")) {
-                    request.getSession().setAttribute("message", "Appointment canceled successfully!");
+                    request.getSession().setAttribute("message", "Hủy lịch hẹn thành công!");
                 } else {
-                    request.getSession().setAttribute("error", "Failed to update schedule status.");
+                    request.getSession().setAttribute("error", "Không thể cập nhật trạng thái khung giờ.");
                 }
             } else {
-                request.getSession().setAttribute("error", "Failed to cancel appointment.");
-            }
-        } else if ("complete".equals(action)) {
-            String note = request.getParameter("note");
-            if (note == null || note.trim().isEmpty()) {
-                request.getSession().setAttribute("error", "Please provide a note before completing the appointment.");
-            } else if (appointmentService.completeAppointment(appointmentId, note)) {
-                request.getSession().setAttribute("message", "Appointment completed successfully!");
-            } else {
-                request.getSession().setAttribute("error", "Failed to complete appointment.");
+                request.getSession().setAttribute("error", "Không thể hủy lịch hẹn.");
             }
         }
 

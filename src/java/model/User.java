@@ -8,7 +8,7 @@ public class User {
     private String role;
     private String email;
     private String phone;
-    private String profilePicture; // Thêm thuộc tính này
+    private String profilePicture; 
 
     public User() {
     }

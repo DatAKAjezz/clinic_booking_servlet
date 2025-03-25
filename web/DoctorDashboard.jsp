@@ -8,15 +8,14 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
         <title>Doctor Dashboard</title>
         <link rel="stylesheet" href="<%= request.getContextPath()%>/styles/DoctorDashboard.css"/>
-
     </head>
     <body>
         <div class="sidebar">
             <div class="profile">
                 <div class="profile-image" style="background-image: url(data:image/jpeg;base64,${sessionScope.USER.profilePicture}); background-size: cover; background-position: center"></div>
-                <div class="profile-name">${sessionScope.USER.username}</div>
+                <div class="profile-name">${sessionScope.fullName}</div>
                 <div class="profile-email">${sessionScope.USER.email}</div>
-                <a href="MainServlet?btnAction=logout" class="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                <a href="MainServlet?btnAction=logout" class="logout-btn"><i class="bi bi-box-arrow-right"></i> Log out</a>
             </div>
             <div class="menu">
                 <a href="HomePage.jsp" class="menu-item"><span class="menu-icon"><i class="bi bi-house"></i></span>Home</a>
@@ -27,11 +26,15 @@
         </div>
 
         <div class="main-content">
+            <!-- Trong phần header -->
             <div class="header">
                 <h1 class="page-title">My Appointments</h1>
-                <div class="user-info">Logged in as: ${sessionScope.USER.username} (Doctor)</div>
+                <div class="user-info">Logged in as: ${sessionScope.fullName} (Doctor)</div>
                 <button class="refresh-btn" onclick="window.location.href = 'DoctorDashboardServlet'"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+                <button class="today-btn" onclick="window.location.href = 'DoctorDashboardServlet?today=true'"><i class="bi bi-calendar-day"></i> Today's Appointments</button>
             </div>
+
+            <!-- Sau appointments-count -->
             <div class="appointments-count"><i class="bi bi-calendar-check"></i> Appointments (${requestScope.appointments != null ? requestScope.appointments.size() : 0})</div>
 
             <c:if test="${not empty sessionScope.message}">
@@ -62,11 +65,28 @@
                         <option value="canceled" ${param.statusFilter == 'canceled' ? 'selected' : ''}>Canceled</option>
                         <option value="completed" ${param.statusFilter == 'completed' ? 'selected' : ''}>Completed</option>
                     </select>
+
+                    <!-- Thêm input date để lọc theo ngày -->
+                    <label for="dateFilter" style="margin-left: 20px;">Filter by Date: </label>
+                    <input type="date" name="dateFilter" id="dateFilter" value="${param.dateFilter}" onchange="this.form.submit()">
+
                     <input type="hidden" name="searchPatient" value="${param.searchPatient}">
                     <input type="hidden" name="page" value="1">
                 </form>
             </div>
 
+            <!-- Cập nhật thông báo hiển thị ngày đã chọn -->
+            <div class="appointments-count"><i class="bi bi-calendar-check"></i> Appointments (${requestScope.appointments != null ? requestScope.appointments.size() : 0})</div>
+            <c:if test="${requestScope.showingToday}">
+                <div class="today-info" style="color: #10b981; margin: 10px 0;">
+                    <i class="bi bi-calendar"></i> Showing appointments for today 
+                </div>
+            </c:if>
+            <c:if test="${not empty param.dateFilter && !requestScope.showingToday}">
+                <div class="date-info" style="color: #3b82f6; margin: 10px 0;">
+                    <i class="bi bi-calendar"></i> Showing appointments for ${param.dateFilter}
+                </div>
+            </c:if>
             <c:forEach var="appointment" items="${requestScope.appointments}">
                 <div class="appointment-card">
                     <div class="session-title"><i class="bi bi-clipboard-pulse"></i> ${appointment.serviceName}</div>
@@ -74,13 +94,12 @@
                     <div class="patient-info">
                         <div class="patient-name"><i class="bi bi-person-circle"></i> ${appointment.patientName}</div>
                         <div class="schedule-info"><i class="bi bi-calendar-date"></i> Date: ${appointment.appointmentDate}</div>
-                        <div class="schedule-info"><i class="bi bi-clock"></i> Time: ${appointment.appointmentTime}</div>
                         <div class="schedule-info"><i class="bi bi-chat-left-text"></i> Reason: ${appointment.reason}</div>
                         <div class="schedule-info"><i class="bi bi-tag"></i> Status: 
-                            <span class="${appointment.status == 'pending' ? 'text-warning' : 
-                                           appointment.status == 'confirmed' ? 'text-primary' : 
-                                           appointment.status == 'completed' ? 'text-success' : 
-                                           appointment.status == 'canceled' ? 'text-danger' : ''}">
+                            <span class="info-text ${appointment.status == 'pending' ? 'text-warning' : 
+                                                     appointment.status == 'confirmed' ? 'text-primary' : 
+                                                     appointment.status == 'completed' ? 'text-success' : 
+                                                     appointment.status == 'canceled' ? 'text-danger' : ''}">
                                       ${appointment.status}
                                   </span>
                             </div>
@@ -92,19 +111,12 @@
                             <input type="hidden" name="patientId" value="${appointment.patientId}">
                             <button type="submit" class="view-history-btn"><i class="bi bi-file-earmark-medical"></i> View Medical History</button>
                         </form>
-                        <c:if test="${appointment.status == 'pending'}">
-                            <form action="DoctorDashboardServlet" method="POST" style="display:inline;">
-                                <input type="hidden" name="appointmentId" value="${appointment.appointmentId}">
-                                <input type="hidden" name="action" value="confirm">
-                                <button type="submit" class="confirm-btn"><i class="bi bi-check-circle"></i> Confirm Appointment</button>
-                            </form>
-                        </c:if>
                         <c:if test="${appointment.status == 'confirmed'}">
                             <form action="DoctorDashboardServlet" method="POST">
                                 <input type="hidden" name="appointmentId" value="${appointment.appointmentId}">
                                 <input type="hidden" name="action" value="complete">
                                 <textarea name="note" class="note-input" placeholder="Enter medical note, diagnosis, and treatment details" required></textarea>
-                                <button type="submit" class="complete-btn"><i class="bi bi-check2-all"></i> Complete Appointment</button>
+                                <button type="submit" class="complete-btn" onclick="return confirm('Are you sure you want to complete this appointment?');"><i class="bi bi-check2-all"></i> Complete Appointment</button>
                             </form>
                         </c:if>
                     </div>

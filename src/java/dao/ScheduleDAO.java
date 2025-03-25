@@ -25,7 +25,7 @@ public class ScheduleDAO {
 
     public List<Schedule> getAvailableSchedules() {
         List<Schedule> schedules = new ArrayList<>();
-        String sql = "SELECT schedule_id, doctor_id, date, start_time, end_time, status " +
+        String sql = "SELECT schedule_id, doctor_id, start_time, end_time, status " +
                      "FROM Schedules WHERE status = 'available'";
         try (Connection conn = DBUtils.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -34,12 +34,36 @@ public class ScheduleDAO {
                 Schedule schedule = new Schedule(
                     rs.getInt("schedule_id"),
                     rs.getInt("doctor_id"),
-                    rs.getDate("date"),
                     rs.getTime("start_time"),
                     rs.getTime("end_time"),
                     rs.getString("status")
                 );
                 schedules.add(schedule);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return schedules;
+    }
+
+    public List<Schedule> getAvailableSchedulesByDoctor(int doctorId) {
+        List<Schedule> schedules = new ArrayList<>();
+        String sql = "SELECT schedule_id, doctor_id, start_time, end_time, status " +
+                     "FROM Schedules WHERE status = 'available' AND doctor_id = ?";
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, doctorId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Schedule schedule = new Schedule(
+                        rs.getInt("schedule_id"),
+                        rs.getInt("doctor_id"),
+                        rs.getTime("start_time"),
+                        rs.getTime("end_time"),
+                        rs.getString("status")
+                    );
+                    schedules.add(schedule);
+                }
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

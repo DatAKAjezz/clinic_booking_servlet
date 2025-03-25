@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class DoctorDashboardServlet extends HttpServlet {
@@ -36,7 +37,11 @@ public class DoctorDashboardServlet extends HttpServlet {
 
         String statusFilter = request.getParameter("statusFilter");
         String searchPatient = request.getParameter("searchPatient");
+        String todayParam = request.getParameter("today");
+        String dateFilter = request.getParameter("dateFilter"); // Thêm tham số dateFilter
+        boolean showToday = "true".equals(todayParam);
         int page = 1;
+        
         try {
             page = Integer.parseInt(request.getParameter("page"));
         } catch (NumberFormatException e) {
@@ -44,8 +49,30 @@ public class DoctorDashboardServlet extends HttpServlet {
         }
         if (page < 1) page = 1;
 
-        List<Appointment> appointments = appointmentService.getAppointmentsByDoctorId(doctorId, statusFilter, searchPatient, page, PAGE_SIZE);
-        int totalAppointments = appointmentService.getAppointmentsCountByDoctorId(doctorId, statusFilter, searchPatient);
+        List<Appointment> appointments;
+        int totalAppointments;
+        
+        if (showToday) {
+            LocalDate today = LocalDate.now(); // 2025-03-25
+            appointments = appointmentService.getAppointmentsByDoctorIdAndDate(
+                doctorId, today.toString(), statusFilter, searchPatient, page, PAGE_SIZE);
+            totalAppointments = appointmentService.getAppointmentsCountByDoctorIdAndDate(
+                doctorId, today.toString(), statusFilter, searchPatient);
+            request.setAttribute("showingToday", true);
+        } else if (dateFilter != null && !dateFilter.isEmpty()) {
+            // Lọc theo ngày được chọn từ input
+            appointments = appointmentService.getAppointmentsByDoctorIdAndDate(
+                doctorId, dateFilter, statusFilter, searchPatient, page, PAGE_SIZE);
+            totalAppointments = appointmentService.getAppointmentsCountByDoctorIdAndDate(
+                doctorId, dateFilter, statusFilter, searchPatient);
+        } else {
+            // Hiển thị tất cả lịch khám
+            appointments = appointmentService.getAppointmentsByDoctorId(
+                doctorId, statusFilter, searchPatient, page, PAGE_SIZE);
+            totalAppointments = appointmentService.getAppointmentsCountByDoctorId(
+                doctorId, statusFilter, searchPatient);
+        }
+
         int totalPages = (int) Math.ceil((double) totalAppointments / PAGE_SIZE);
         if (page > totalPages && totalPages > 0) page = totalPages;
 
@@ -55,6 +82,7 @@ public class DoctorDashboardServlet extends HttpServlet {
         request.getRequestDispatcher("DoctorDashboard.jsp").forward(request, response);
     }
 
+    // Giữ nguyên doPost và getDoctorIdByUserId
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -74,13 +102,7 @@ public class DoctorDashboardServlet extends HttpServlet {
         }
 
         String action = request.getParameter("action");
-        if ("confirm".equals(action)) {
-            if (appointmentService.confirmAppointment(appointmentId)) {
-                request.getSession().setAttribute("message", "Appointment confirmed successfully!");
-            } else {
-                request.getSession().setAttribute("error", "Failed to confirm appointment.");
-            }
-        } else if ("complete".equals(action)) {
+        if ("complete".equals(action)) {
             String note = request.getParameter("note");
             if (note == null || note.trim().isEmpty()) {
                 request.getSession().setAttribute("error", "Please provide a note before completing the appointment.");

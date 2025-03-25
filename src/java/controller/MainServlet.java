@@ -1,7 +1,11 @@
 package controller;
 
+import dao.DoctorDAO;
+import dao.PatientDAO;
+import dao.ReceptionistDAO; // Thêm import cho ReceptionistDAO
 import model.User;
 import model.Patient;
+import model.Receptionist; // Thêm import cho Receptionist
 import service.UserService;
 import service.PatientService;
 import javax.servlet.ServletException;
@@ -14,6 +18,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.servlet.http.HttpSession;
 
 public class MainServlet extends HttpServlet {
     private UserService userService = new UserService();
@@ -54,6 +59,27 @@ public class MainServlet extends HttpServlet {
                 User user = userService.login(username, password);
                 if (user != null) {
                     request.getSession().setAttribute("USER", user);
+                    String fullName = "";
+                    
+                    if ("patient".equals(user.getRole())) {
+                        PatientDAO pd = new PatientDAO();
+                        fullName = pd.getPatientByUserId(user.getUserId()).getFullName();
+                    } else if ("doctor".equals(user.getRole())) {
+                        DoctorDAO dd = new DoctorDAO();
+                        fullName = dd.getDoctorByUserId(user.getUserId()).getFullName();
+                    } else if ("receptionist".equals(user.getRole())) {
+                        ReceptionistDAO rd = new ReceptionistDAO();
+                        Receptionist receptionist = rd.getReceptionistByUserId(user.getUserId());
+                        if (receptionist != null) {
+                            fullName = receptionist.getFullName();
+                        } else {
+                            fullName = "Lễ tân chưa cập nhật thông tin";
+                        }
+                    }
+                    
+                    HttpSession session = request.getSession();
+                    session.setAttribute("fullName", fullName);
+                    
                     switch (user.getRole()) {
                         case "patient":
                             response.sendRedirect("PatientDashboardServlet");
@@ -68,7 +94,7 @@ public class MainServlet extends HttpServlet {
                             response.sendRedirect("HomePage.jsp");
                     }
                 } else {
-                    request.setAttribute("ERROR", "Invalid username or password");
+                    request.setAttribute("ERROR", "Tên đăng nhập hoặc mật khẩu không đúng");
                     request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
                 }
                 break;
@@ -80,7 +106,7 @@ public class MainServlet extends HttpServlet {
                 newUser.setEmail(request.getParameter("email"));
                 newUser.setPhone(request.getParameter("phone"));
 
-                if (userService.register(newUser)) { // Gọi từ UserService, nhưng logic nằm ở UserDAO
+                if (userService.register(newUser)) {
                     int userId = getLastInsertedUserId();
                     Patient patient = new Patient();
                     patient.setUserId(userId);
@@ -90,14 +116,14 @@ public class MainServlet extends HttpServlet {
                     patient.setGender(request.getParameter("sex"));
 
                     if (patientService.addPatient(patient)) {
-                        request.setAttribute("NOTI", "Registration successful! Please log in.");
+                        request.setAttribute("NOTI", "Đăng ký thành công! Vui lòng đăng nhập.");
                         request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
                     } else {
-                        request.setAttribute("NOTI", "Failed to register patient info.");
+                        request.setAttribute("NOTI", "Không thể đăng ký thông tin bệnh nhân.");
                         request.getRequestDispatcher("RegisterPage.jsp").forward(request, response);
                     }
                 } else {
-                    request.setAttribute("NOTI", "Username or email already exists.");
+                    request.setAttribute("NOTI", "Tên đăng nhập hoặc email đã tồn tại.");
                     request.getRequestDispatcher("RegisterPage.jsp").forward(request, response);
                 }
                 break;

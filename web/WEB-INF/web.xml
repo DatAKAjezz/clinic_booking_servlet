@@ -8,7 +8,6 @@
         <servlet-name>StaffDashboardServlet</servlet-name>
         <servlet-class>controller.StaffDashboardServlet</servlet-class>
     </servlet>
-
     <servlet>
         <servlet-name>ReviewServlet</servlet-name>
         <servlet-class>controller.ReviewServlet</servlet-class>
@@ -20,6 +19,10 @@
     <servlet>
         <servlet-name>ProfileServlet</servlet-name>
         <servlet-class>controller.UpdateProfileServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CancelBookingServlet</servlet-name>
+        <servlet-class>controller.CancelBookingServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
@@ -94,8 +97,10 @@
         <servlet-name>ProfileServlet</servlet-name>
         <url-pattern>/ProfileServlet</url-pattern>
     </servlet-mapping>
-    
-
+    <servlet-mapping>
+        <servlet-name>CancelBookingServlet</servlet-name>
+        <url-pattern>/CancelBookingServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

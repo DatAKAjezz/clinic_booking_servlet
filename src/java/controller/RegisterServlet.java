@@ -35,7 +35,6 @@ public class RegisterServlet extends HttpServlet {
                 String username = request.getParameter("username");
                 String password = request.getParameter("password");
                 String url = REGISTER_PAGE;
-                
 
                 // Validation
                 if (isEmptyOrNull(username) || isEmptyOrNull(password) || isEmptyOrNull(email) ||
@@ -49,7 +48,7 @@ public class RegisterServlet extends HttpServlet {
                 int age;
                 try {
                     LocalDate dob = LocalDate.parse(dateOfBirth);
-                    LocalDate currentDate = LocalDate.now(); 
+                    LocalDate currentDate = LocalDate.now();
                     age = Period.between(dob, currentDate).getYears();
                     if (age < 0) {
                         request.setAttribute("NOTI", "Invalid date of birth!");
@@ -62,6 +61,7 @@ public class RegisterServlet extends HttpServlet {
                     return;
                 }
 
+                // Lưu mật khẩu trực tiếp (không mã hóa)
                 User user = new User(0, username.trim(), password.trim(), "patient", email.trim(), phone != null ? phone.trim() : null, null);
                 Patient patient = new Patient(0, 0, firstName.trim() + " " + lastName.trim(), age, address != null ? address.trim() : null, sex);
 
@@ -73,7 +73,7 @@ public class RegisterServlet extends HttpServlet {
                     int userId = userDAO.createUser(user);
                     if (userId > 0) {
                         patient.setUserId(userId);
-                        if (patientDAO.createPatient(patient)) { 
+                        if (patientDAO.createPatient(patient)) {
                             conn.commit();
                             request.setAttribute("NOTI", "Register Successfully!");
                             url = LOGIN_PAGE;

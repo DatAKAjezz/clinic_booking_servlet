@@ -19,7 +19,7 @@ public class AppointmentService {
     }
 
     public Appointment getAppointmentById(int appointmentId) {
-        return appointmentDAO.getAppointmentById(appointmentId); 
+        return appointmentDAO.getAppointmentById(appointmentId);
     }
 
     public boolean isScheduleBooked(int scheduleId, Date appointmentDate) {
@@ -82,9 +82,7 @@ public class AppointmentService {
         return appointmentDAO.getAllAppointmentsCountByDate(date, statusFilter, searchPatient, searchDoctor);
     }
 
-    // Trong AppointmentService.java
     public boolean deleteAppointment(int appointmentId) {
         return appointmentDAO.deleteAppointment(appointmentId);
     }
-
 }

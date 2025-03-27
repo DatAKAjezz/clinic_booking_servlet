@@ -40,7 +40,7 @@ public class StaffDashboardServlet extends HttpServlet {
 
         if ("add".equals(action)) {
             List<Doctor> doctors = doctorService.getAllDoctors();
-            List<Schedule> schedules = scheduleService.getAllSchedules(); 
+            List<Schedule> schedules = scheduleService.getAllSchedules();
             List<Service> services = serviceService.getAllServices();
 
             request.setAttribute("doctors", doctors);
@@ -143,14 +143,20 @@ public class StaffDashboardServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("delete".equals(action)) {
-            int appointmentId = Integer.parseInt(request.getParameter("appointmentId"));
-            int scheduleId = appointmentService.getScheduleIdByAppointmentId(appointmentId);
-            boolean deleted = appointmentService.deleteAppointment(appointmentId);
-            if (deleted && scheduleId != -1) {
-                scheduleService.updateScheduleStatus(scheduleId, "available");
-                request.getSession().setAttribute("message", "Lịch hẹn đã được xóa thành công!");
-            } else {
-                request.getSession().setAttribute("error", "Không thể xóa lịch hẹn!");
+            try {
+                int appointmentId = Integer.parseInt(request.getParameter("appointmentId"));
+                int scheduleId = appointmentService.getScheduleIdByAppointmentId(appointmentId);
+                boolean deleted = appointmentService.deleteAppointment(appointmentId);
+                if (deleted) {
+                    if (scheduleId != -1) {
+                        scheduleService.updateScheduleStatus(scheduleId, "available");
+                    }
+                    request.getSession().setAttribute("message", "Lịch hẹn đã được xóa thành công!");
+                } else {
+                    request.getSession().setAttribute("error", "Không thể xóa lịch hẹn! Lịch hẹn không tồn tại hoặc đã bị xóa trước đó.");
+                }
+            } catch (NumberFormatException e) {
+                request.getSession().setAttribute("error", "ID lịch hẹn không hợp lệ!");
             }
             response.sendRedirect("StaffDashboardServlet");
             return;
@@ -220,4 +226,4 @@ public class StaffDashboardServlet extends HttpServlet {
             response.sendRedirect("StaffDashboardServlet");
         }
     }
-}
+}   

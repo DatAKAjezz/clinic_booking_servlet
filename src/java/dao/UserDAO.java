@@ -26,12 +26,11 @@ public class UserDAO {
         }
     }
 
-    public User login(String username, String password) {
-        String sql = "SELECT user_id, username, password, role, email, phone, profile_picture FROM Users WHERE username = ? AND password = ?";
+    public User getUserByUsername(String username) {
+        String sql = "SELECT user_id, username, password, role, email, phone, profile_picture FROM Users WHERE username = ?";
         try (Connection conn = DBUtils.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
-            ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return new User(
@@ -50,12 +49,20 @@ public class UserDAO {
         return null;
     }
 
+    public User login(String username, String password) {
+        User user = getUserByUsername(username);
+        if (user != null && password.equals(user.getPassword())) { // So sánh trực tiếp
+            return user;
+        }
+        return null;
+    }
+
     public int createUser(User user) throws SQLException, ClassNotFoundException {
         String sql = "INSERT INTO Users (username, password, role, email, phone) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBUtils.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getPassword());
+            stmt.setString(2, user.getPassword()); // Lưu mật khẩu trực tiếp
             stmt.setString(3, user.getRole());
             stmt.setString(4, user.getEmail());
             stmt.setString(5, user.getPhone());
@@ -64,10 +71,10 @@ public class UserDAO {
             if (rows > 0) {
                 ResultSet rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
-                    return rs.getInt(1); // Trả về user_id vừa tạo
+                    return rs.getInt(1); 
                 }
             }
-            return 0; // Trả về 0 nếu thất bại
+            return 0;
         }
     }
 
@@ -80,7 +87,4 @@ public class UserDAO {
             return rows > 0;
         }
     }
-    
-    
-    
 }

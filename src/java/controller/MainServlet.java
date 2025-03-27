@@ -62,8 +62,9 @@ public class MainServlet extends HttpServlet {
                 case "loginServlet":
                     String username = request.getParameter("txtusername");
                     String password = request.getParameter("txtpassword");
-                    User user = userService.login(username, password);
-                    if (user != null) {
+
+                    User user = userService.getUserByUsername(username); 
+                    if (user != null && password.equals(user.getPassword())) { // So sánh trực tiếp
                         request.getSession().setAttribute("USER", user);
                         String fullName = "";
 
@@ -105,46 +106,82 @@ public class MainServlet extends HttpServlet {
                     }
                     break;
                 case "register":
+                    String usernameReg = request.getParameter("username");
+                    String plainPassword = request.getParameter("password");
+                    String email = request.getParameter("email");
+                    String phone = request.getParameter("phone");
+                    String firstName = request.getParameter("firstName");
+                    String lastName = request.getParameter("lastName");
+                    String dateOfBirth = request.getParameter("dateOfBirth");
+                    String address = request.getParameter("address");
+                    String sex = request.getParameter("sex");
+
+                    if (isEmptyOrNull(usernameReg) || isEmptyOrNull(plainPassword) || isEmptyOrNull(email) ||
+                        isEmptyOrNull(firstName) || isEmptyOrNull(lastName) || isEmptyOrNull(dateOfBirth)) {
+                        request.setAttribute("NOTI", "Vui lòng điền đầy đủ các trường bắt buộc!");
+                        request.getRequestDispatcher("RegisterPage.jsp").forward(request, response);
+                        return;
+                    }
+
                     User newUser = new User();
-                    newUser.setUsername(request.getParameter("username"));
-                    newUser.setPassword(request.getParameter("password"));
-                    newUser.setRole("patient"); 
-                    newUser.setEmail(request.getParameter("email"));
-                    newUser.setPhone(request.getParameter("phone"));
+                    newUser.setUsername(usernameReg);
+                    newUser.setPassword(plainPassword); // Lưu mật khẩu trực tiếp
+                    newUser.setRole("patient");
+                    newUser.setEmail(email);
+                    newUser.setPhone(phone);
 
                     if (userService.register(newUser)) {
                         int userId = getLastInsertedUserId();
+                        if (userId == -1) {
+                            request.setAttribute("NOTI", "Không thể lấy ID người dùng vừa tạo!");
+                            request.getRequestDispatcher("RegisterPage.jsp").forward(request, response);
+                            return;
+                        }
+
                         Patient patient = new Patient();
                         patient.setUserId(userId);
-                        patient.setFullName(request.getParameter("firstName") + " " + request.getParameter("lastName"));
-                        patient.setAge(calculateAge(Date.valueOf(request.getParameter("dateOfBirth"))));
-                        patient.setAddress(request.getParameter("address"));
-                        patient.setGender(request.getParameter("sex"));
+                        patient.setFullName(firstName + " " + lastName);
+                        patient.setAddress(address);
+                        patient.setGender(sex);
+
+                        try {
+                            Date dob = Date.valueOf(dateOfBirth);
+                            patient.setAge(calculateAge(dob));
+                            if (patient.getAge() < 0) {
+                                request.setAttribute("NOTI", "Ngày sinh không hợp lệ (trong tương lai)!");
+                                request.getRequestDispatcher("RegisterPage.jsp").forward(request, response);
+                                return;
+                            }
+                        } catch (IllegalArgumentException e) {
+                            request.setAttribute("NOTI", "Ngày sinh không đúng định dạng (yyyy-MM-dd)!");
+                            request.getRequestDispatcher("RegisterPage.jsp").forward(request, response);
+                            return;
+                        }
 
                         if (patientService.addPatient(patient)) {
                             request.setAttribute("NOTI", "Đăng ký thành công! Vui lòng đăng nhập.");
                             request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
                         } else {
-                            request.setAttribute("NOTI", "Không thể đăng ký thông tin bệnh nhân.");
+                            request.setAttribute("NOTI", "Không thể đăng ký thông tin bệnh nhân!");
                             request.getRequestDispatcher("RegisterPage.jsp").forward(request, response);
                         }
                     } else {
-                        request.setAttribute("NOTI", "Tên đăng nhập hoặc email đã tồn tại.");
+                        request.setAttribute("NOTI", "Tên đăng nhập hoặc email đã tồn tại!");
                         request.getRequestDispatcher("RegisterPage.jsp").forward(request, response);
                     }
                     break;
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error occurred");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi kết nối cơ sở dữ liệu!");
         }
     }
 
     private int getLastInsertedUserId() {
         String sql = "SELECT IDENT_CURRENT('Users') AS last_id";
         try (Connection conn = utils.DBUtils.getConnection();
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(sql)) {
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) {
                 return rs.getInt("last_id");
             }
@@ -163,5 +200,9 @@ public class MainServlet extends HttpServlet {
             age--;
         }
         return age;
+    }
+
+    private boolean isEmptyOrNull(String str) {
+        return str == null || str.trim().isEmpty();
     }
 }

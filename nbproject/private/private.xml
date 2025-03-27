@@ -19,6 +19,7 @@
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/src/java/controller/LogoutServlet.java</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/src/java/service/PatientService.java</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/src/java/model/Service.java</file>
+            <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/src/java/utils/PasswordUtil.java</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/src/java/model/User.java</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/src/java/controller/MedicalHistoryServlet.java</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/web/footer.jsp</file>
@@ -32,6 +33,7 @@
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/web/AddAppointment.jsp</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/web/styles/DoctorList.css</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/web/WEB-INF/web.xml</file>
+            <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/src/java/utils/DBUtils.java</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/web/MedicalHistory.jsp</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/web/RegisterPage.jsp</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/src/java/controller/StaffDashboardServlet.java</file>
@@ -39,7 +41,10 @@
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/web/styles/RegisterPage.css</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/web/Profile.jsp</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/web/DoctorDashboard.jsp</file>
+            <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/src/java/service/UserService.java</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/src/java/controller/DoctorDashboardServlet.java</file>
+            <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/src/java/service/ServiceService.java</file>
+            <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/src/java/model/Review.java</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/src/java/model/Doctor.java</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/src/java/dao/ReceptionistDAO.java</file>
             <file>file:/D:/user2/ProjectClinicBooking/ProjectClinicBooking/web/BookAppointment.jsp</file>

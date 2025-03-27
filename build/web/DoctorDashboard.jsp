@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="<%= request.getContextPath()%>/styles/DoctorDashboard.css"/>
     </head>
     <body>
-        
+
         <%
             User u = (User) session.getAttribute("USER");
             if (u == null || !u.getRole().equals("doctor")) {
@@ -19,7 +19,7 @@
                 request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
             }
         %>
-        
+
         <div class="sidebar">
             <div class="profile">
                 <div class="profile-image" style="background-image: url(data:image/jpeg;base64,${sessionScope.USER.profilePicture}); background-size: cover; background-position: center"></div>
@@ -102,7 +102,17 @@
                     <div class="session-title"><i class="bi bi-clipboard-pulse"></i> ${appointment.serviceName}</div>
                     <div class="appointment-id">Appointment ID: ${appointment.appointmentId}</div>
                     <div class="patient-info">
-                        <div class="patient-name"><i class="bi bi-person-circle"></i> ${appointment.patientName}</div>
+                        <div class="patient-name">
+                            <i class="bi bi-person-circle"></i> 
+                            <c:choose>
+                                <c:when test="${not empty appointment.patientName}">
+                                    ${appointment.patientName}
+                                </c:when>
+                                <c:otherwise>
+                                    ${appointment.guestName} (${appointment.guestPhone})
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
                         <div class="schedule-info"><i class="bi bi-calendar-date"></i> Date: ${appointment.appointmentDate}</div>
                         <div class="schedule-info"><i class="bi bi-chat-left-text"></i> Reason: ${appointment.reason}</div>
                         <div class="schedule-info"><i class="bi bi-tag"></i> Status: 
@@ -112,10 +122,10 @@
                                                      appointment.status == 'canceled' ? 'text-danger' : ''}">
                                       ${appointment.status}
                                   </span>
-                        </div>
-                        <c:if test="${not empty appointment.note}">
-                            <div class="schedule-info"><i class="bi bi-journal-text"></i> Note: ${appointment.note}</div>
-                        </c:if>
+                            </div>
+                            <c:if test="${not empty appointment.note}">
+                                <div class="schedule-info"><i class="bi bi-journal-text"></i> Note: ${appointment.note}</div>
+                            </c:if>
                         </div>
                         <form action="MedicalHistoryServlet" method="GET" style="display:inline;">
                             <input type="hidden" name="patientId" value="${appointment.patientId}">

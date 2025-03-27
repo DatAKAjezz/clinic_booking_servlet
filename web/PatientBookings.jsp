@@ -71,7 +71,7 @@
                             <div class="schedule-info"><i class="bi bi-journal-text"></i> Ghi Chú: ${booking.note}</div>
                         </c:if>
 
-                        <c:if test="${booking.status == 'pending' || booking.status == 'confirmed'}">
+                        <c:if test="${booking.status == 'pending'}">
                             <form action="CancelBookingServlet" method="post">
                                 <input type="hidden" name="appointmentId" value="${booking.appointmentId}">
                                 <button type="submit" class="cancel-btn" onclick="return confirm('Are you sure you want to cancel this booking?');"><i class="bi bi-x-circle"></i> Cancel Booking</button>

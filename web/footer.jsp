@@ -101,17 +101,13 @@
                 <!-- About Us -->
                 <div class="footer-section about-us">
                     <h1>About Us</h1>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                        Laboriosam itaque unde facere repellendus, odio et iste
-                        voluptatum aspernatur ratione.
-                    </p>
+
                     <div class="contact-info">
                         <p class="phone-number">
-                            <i class="fa fa-phone"></i> +1 291 3912 329
+                            <i class="fa fa-phone"></i> +84799 165 330
                         </p>
                         <p class="email">
-                            <i class="fa fa-envelope"></i> info@gmail.com
+                            <i class="fa fa-envelope"></i> dathtse196321@gmail.com
                         </p>
                     </div>
                 </div>

@@ -4,134 +4,119 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Header YouMed</title>
+        <title>YouMed Header</title>
         <style>
-            /*
-    To change this license header, choose License Headers in Project Properties.
-    To change this template file, choose Tools | Templates
-    and open the template in the editor.
-            */
-            /* 
-                Created on : Mar 21, 2025, 12:14:52 PM
-                Author     : datdat
-            */
             * {
                 margin: 0;
                 padding: 0;
                 box-sizing: border-box;
             }
+
             body {
-                font-family: Arial, sans-serif;
+                font-family: 'Inter', Arial, sans-serif;
+                color: #333;
+                line-height: 1.6;
             }
+
             .navbar {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 background-color: white;
-                border-bottom: 2px solid #eeeeee;
-                box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-                text-transform: uppercase;
+                padding: 1rem 5%;
+                border-bottom: 1px solid #e0e0e0;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+                position: sticky;
+                top: 0;
+                z-index: 100;
             }
+
             .logo {
-                width: 8%;
-                /*height: 130px;*/
-                padding-left: 1%;
+                width: 150px;
+                transition: transform 0.3s ease;
             }
+
             .logo img {
-                width: 120%;
+                width: 100%;
+                height: auto;
             }
+
+            .logo:hover {
+                transform: scale(1.05);
+            }
+
             .nav-links {
                 display: flex;
                 list-style: none;
+                align-items: center;
+                gap: 2rem;
             }
+
             .nav-links li {
-                margin: 0 2em; /* T?ng kho?ng cách gi?a các menu */
-                font-size: 0.9rem;
+                position: relative;
             }
-            .nav-links a {
+
+            .nav-links a, .nav-links button {
                 text-decoration: none;
-                color: black;
-                transition: color 0.2s ease; 
-            }
-
-            /* Style cho form trong menu */
-            .nav-links form {
-                margin: 0;
-                padding: 0;
-            }
-
-            .nav-links button {
+                color: #333;
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 0.9rem;
+                transition: color 0.3s ease;
                 background: none;
                 border: none;
-                font-family: Arial, sans-serif;
-                font-size: 0.9rem;
-                color: black;
                 cursor: pointer;
-                text-transform: uppercase;
-                padding: 0;
-                transition: color 0.2s ease;
             }
 
-            .nav-links button:hover {
+            .nav-links a:hover, .nav-links button:hover {
                 color: #346fdb;
-                text-decoration: underline;
             }
 
-            .nav-links a:hover {
-                color: #346fdb; 
-                text-decoration: underline;
+            .nav-links a::after, .nav-links button::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: -5px;
+                left: 50%;
+                background-color: #346fdb;
+                transition: width 0.3s ease, left 0.3s ease;
             }
-            .login-btn {
-                padding: 0.8% 1.5%;
+
+            .nav-links a:hover::after, .nav-links button:hover::after {
+                width: 100%;
+                left: 0;
+            }
+
+            .login-btn, .logout-btn {
+                padding: 0.6rem 1.2rem;
                 border: 1px solid #346fdb;
                 color: #346fdb;
-                font-weight: bold;
-                font-size: 0.9rem;
-                text-decoration: none;
                 border-radius: 5px;
-                transition: 0.3s;
-                margin-right: 5%;
+                font-weight: bold;
+                text-transform: uppercase;
+                transition: all 0.3s ease;
             }
-            .login-btn:hover {
+
+            .login-btn:hover, .logout-btn:hover {
                 background: linear-gradient(45deg, #9beaff 1%, #346fdb);
                 color: white;
+                text-decoration: none;
             }
+
             .user-info {
-                align-items: center;
-                /* gap: 1rem; */
-                margin-right: 5%;
-                /* height: 59px; */
-                justify-items: center;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
             }
 
             .user-info h2 {
                 font-size: 1rem;
                 color: #346fdb;
                 font-weight: bold;
-                padding-bottom: 1rem;
+                margin-bottom: 0.5rem;
                 text-transform: uppercase;
             }
-
-            .logout-btn {
-                padding: 0.5rem 1.2rem;
-                border: 1px solid #ff4d4d;
-                color: #ff4d4d;
-                font-weight: bold;
-                font-size: 0.9rem;
-                text-decoration: none;
-                border-radius: 5px;
-                transition: 0.3s;
-            }
-
-            .logout-btn:hover {
-                background: linear-gradient(45deg, #ff9b9b, #ff4d4d);
-                color: white;
-            }
-            .nav-links button:hover, .nav-links a:hover {
-                color: #346fdb;
-                text-decoration: underline;
-            }
-
         </style>
     </head>
     <body>
@@ -156,13 +141,13 @@
                         </c:when>
                         <c:when test="${sessionScope.USER.role == 'doctor'}">
                         <li><a href="DoctorDashboardServlet">Scheduled</a></li>
-                        <li><a href="MedicalHistoryServlet">Patient Records</a></li>
+                        <li><a href="MedicalHistoryServlet">Record</a></li>
                         </c:when>
                         <c:when test="${sessionScope.USER.role == 'receptionist'}">
                         <li><a href="StaffDashboardServlet">Scheduled</a></li>
-                        </c:when>
-                    </c:choose>
-                <li><a href="Profile.jsp">Profile</a></li>
+                        <li><a href="Profile.jsp">Profile</a></li>
+                    </c:when>
+                </c:choose>
             </ul>
             <c:choose>
                 <c:when test="${empty sessionScope.USER}">

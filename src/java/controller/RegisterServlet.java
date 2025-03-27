@@ -49,7 +49,7 @@ public class RegisterServlet extends HttpServlet {
                 int age;
                 try {
                     LocalDate dob = LocalDate.parse(dateOfBirth);
-                    LocalDate currentDate = LocalDate.now(); // Ngày hiện tại: 2025-03-23
+                    LocalDate currentDate = LocalDate.now(); 
                     age = Period.between(dob, currentDate).getYears();
                     if (age < 0) {
                         request.setAttribute("NOTI", "Invalid date of birth!");
@@ -62,7 +62,6 @@ public class RegisterServlet extends HttpServlet {
                     return;
                 }
 
-                // Tạo đối tượng User và Patient
                 User user = new User(0, username.trim(), password.trim(), "patient", email.trim(), phone != null ? phone.trim() : null, null);
                 Patient patient = new Patient(0, 0, firstName.trim() + " " + lastName.trim(), age, address != null ? address.trim() : null, sex);
 
@@ -70,11 +69,11 @@ public class RegisterServlet extends HttpServlet {
                 PatientDAO patientDAO = new PatientDAO();
 
                 try (Connection conn = DBUtils.getConnection()) {
-                    conn.setAutoCommit(false); // Bắt đầu transaction
+                    conn.setAutoCommit(false);
                     int userId = userDAO.createUser(user);
                     if (userId > 0) {
                         patient.setUserId(userId);
-                        if (patientDAO.createPatient(patient)) { // Đổi addPatient thành createPatient
+                        if (patientDAO.createPatient(patient)) { 
                             conn.commit();
                             request.setAttribute("NOTI", "Register Successfully!");
                             url = LOGIN_PAGE;

@@ -15,7 +15,15 @@ public class ScheduleService {
         return scheduleDAO.getAvailableSchedules();
     }
 
+    public List<Schedule> getSchedulesByDoctorId(int doctorId) {
+        return scheduleDAO.getAvailableSchedulesByDoctor(doctorId);
+    }
+    
     public List<Schedule> getAvailableSchedulesByDoctor(int doctorId) {
         return scheduleDAO.getAvailableSchedulesByDoctor(doctorId);
+    }
+    
+    public List<Schedule> getAllSchedules() {
+        return scheduleDAO.getAllSchedules();
     }
 }

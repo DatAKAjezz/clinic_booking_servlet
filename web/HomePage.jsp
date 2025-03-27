@@ -18,7 +18,7 @@
         <script type="text/javascript">
             (function() {
                 // Khởi tạo EmailJS với Public Key của bạn
-                emailjs.init("YOUR_PUBLIC_KEY"); // Thay YOUR_PUBLIC_KEY bằng Public Key từ EmailJS
+                emailjs.init("yIDjG3dEiU-ztXmd1"); // Thay YOUR_PUBLIC_KEY bằng Public Key từ EmailJS
             })();
         </script>
     </head>
@@ -69,7 +69,7 @@
             <div class="container">
                 <div class="info-card">
                     <h2 class="card-title">Our Doctor</h2>
-                    <p class="card-text">We have dozen of seasoned and experienced doctors.</p>
+                    <p class="card-text">We have a team of experienced and dedicated doctors ready to assist you.</p>
                     <a href="DoctorListServlet" class="card-link">LEARN MORE 
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -79,7 +79,7 @@
                 </div>
                 <div class="info-card">
                     <h2 class="card-title">Schedule</h2>
-                    <p class="card-text">Lorem ipsum sit amet consectetur adipiscing elit.</p>
+                    <p class="card-text">Flexible appointment scheduling to fit your busy lifestyle.</p>
                     <a href="#" class="card-link">LEARN MORE 
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -94,7 +94,7 @@
                         <tr><td>Saturday</td><td>9.00-18.30</td></tr>
                         <tr><td>Monday - Thursday</td><td>9.00-15.00</td></tr>
                     </table>
-                    <a href="#" class="card-link">LEARN MORE 
+                    <a href="MedicalHistoryServlet" class="card-link">LEARN MORE 
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                         <polyline points="12 5 19 12 12 19"></polyline>
@@ -117,10 +117,9 @@
                         <p>With compassion and expertise, we strive to make every visit a positive experience.</p>
                         <div class="stats-row">
                             <div class="stat-item"><h3>99%</h3><p>Patient Satisfaction</p></div>
-                            <div class="stat-item"><h3>15+</h3><p>Years of Experience</p></div>
+                            <div class="stat-item"><h3>5+</h3><p>Years of Experience</p></div>
                             <div class="stat-item"><h3>50+</h3><p>Qualified Doctors</p></div>
                         </div>
-                        <a href="#" class="btn">Learn More</a>
                     </div>
                     <div class="about-image">
                         <img src="<%= request.getContextPath()%>/img/slider3.jpg" alt="Our Medical Team">
@@ -166,19 +165,19 @@
                 </div>
                 <div class="services-grid">
                     <div class="service-card">
-                        <div class="service-icon"><img src="<%= request.getContextPath()%>/img/icons/cardiology.png" alt="Cardiology"></div>
+                        <div class="service-icon"><img src="<%= request.getContextPath()%>/img/cardiology.jpg" alt="Cardiology"></div>
                         <h3>Cardiology</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <p>Expert heart care from diagnosis to treatment and recovery.</p>
                     </div>
                     <div class="service-card">
-                        <div class="service-icon"><img src="<%= request.getContextPath()%>/img/icons/laboratory.png" alt="Laboratory"></div>
+                        <div class="service-icon"><img src="<%= request.getContextPath()%>/img/laboratory.jpeg" alt="Laboratory"></div>
                         <h3>Laboratory</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <p>Advanced diagnostic testing for accurate and timely results.</p>
                     </div>
                     <div class="service-card">
-                        <div class="service-icon"><img src="<%= request.getContextPath()%>/img/icons/emergency.png" alt="Emergency"></div>
+                        <div class="service-icon"><img src="<%= request.getContextPath()%>/img/emergency.jpg" alt="Emergency"></div>
                         <h3>Emergency</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <p>24/7 emergency care to handle urgent medical situations.</p>
                     </div>
                 </div>
             </div>
@@ -193,14 +192,14 @@
                 </div>
                 <div class="testimonials-slider">
                     <div class="testimonial-card">
-                        <div class="testimonial-content"><p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</p></div>
+                        <div class="testimonial-content"><p>"The care I received was exceptional. The staff made me feel comfortable and well-informed throughout my treatment."</p></div>
                         <div class="testimonial-author">
                             <img src="<%= request.getContextPath()%>/img/patient.jpg" alt="Patient">
                             <div class="author-info"><h4>John Doe</h4><p>Cardiology Patient</p></div>
                         </div>
                     </div>
                     <div class="testimonial-card">
-                        <div class="testimonial-content"><p>"Proin eget tortor risus. Curabitur non nulla sit amet."</p></div>
+                        <div class="testimonial-content"><p>"The doctors here are incredibly skilled and caring. I’m grateful for their support during my recovery."</p></div>
                         <div class="testimonial-author">
                             <img src="<%= request.getContextPath()%>/img/patient2.jpg" alt="Patient">
                             <div class="author-info"><h4>Jane Smith</h4><p>Dental Patient</p></div>
@@ -222,7 +221,7 @@
                     message: document.getElementById('message').value
                 };
 
-                emailjs.send('service_2m13k58', 'template_zjktp9u', formData)
+                emailjs.send('service_2m13k58', 'template_z5cfgci', formData)
                     .then(function(response) {
                         document.getElementById('formMessage').innerHTML = '<p style="color: green;">Message sent successfully!</p>';
                         document.getElementById('contactForm').reset();

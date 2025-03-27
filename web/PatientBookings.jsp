@@ -1,3 +1,4 @@
+<%@page import="model.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
@@ -10,6 +11,15 @@
         <link rel="stylesheet" href="<%= request.getContextPath()%>/styles/PatientBookings.css"/>
     </head>
     <body>
+
+        <%
+            User u = (User) session.getAttribute("USER");
+            if (u == null || !u.getRole().equals("patient")) {
+                request.setAttribute("ERROR", "Bạn cần đăng nhập với tư cách patient.");
+                request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
+            }
+        %>
+
         <div class="sidebar">
             <div class="profile">
                 <div class="profile-image" style="background-image: url(data:image/jpeg;base64,${sessionScope.USER.profilePicture}); background-size: cover; background-position: center"></div>
@@ -17,7 +27,7 @@
                 <div class="profile-email">${sessionScope.USER.email}</div>
                 <form action="MainServlet" method="post">
                     <input type="hidden" name="btnAction" value="logout"/>
-                    <a href="MainServlet?btnAction=logout" class="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                    <a href="MainServlet?btnAction=logout" class="logout-btn"><i class="bi bi-box-arrow-right"></i> Log out</a>
                 </form>
             </div>
             <div class="menu">
@@ -29,7 +39,10 @@
         </div>
 
         <div class="main-content">
-            <h1 class="page-title">My Bookings History</h1>
+            <div class="header">
+                <h1 class="page-title">My Bookings History</h1>
+                <button class="refresh-btn" onclick="window.location.href = 'PatientDashboardServlet'"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+            </div>
             <div class="bookings-count"><i class="bi bi-calendar-check"></i> My Bookings (${requestScope.bookings != null ? requestScope.bookings.size() : 0})</div>
 
             <form action="BookAppointmentServlet" method="GET">
@@ -53,6 +66,11 @@
                                   </span>
                             </div>
                         </div>
+
+                        <c:if test="${not empty booking.note}">
+                            <div class="schedule-info"><i class="bi bi-journal-text"></i> Ghi Chú: ${booking.note}</div>
+                        </c:if>
+
                         <c:if test="${booking.status == 'pending' || booking.status == 'confirmed'}">
                             <form action="CancelBookingServlet" method="post">
                                 <input type="hidden" name="appointmentId" value="${booking.appointmentId}">

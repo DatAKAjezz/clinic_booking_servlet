@@ -23,7 +23,6 @@ public class DoctorListServlet extends HttpServlet {
         List<Doctor> doctors = doctorService.getAllDoctors();
         Map<Integer, List<Review>> doctorReviews = reviewDAO.getAllReviews();
 
-        // Tính trung bình đánh giá cho từng bác sĩ
         Map<Integer, Double> averageRatings = new HashMap<>();
         for (Doctor doctor : doctors) {
             double avgRating = reviewDAO.getAverageRatingByDoctorId(doctor.getDoctorId(), doctorReviews);

@@ -24,7 +24,8 @@ public class DoctorDashboardServlet extends HttpServlet {
             throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("USER");
         if (user == null || !"doctor".equals(user.getRole())) {
-            response.sendRedirect("LoginPage.jsp");
+            request.setAttribute("ERROR", "Bạn cần đăng nhập với tư cách doctor.");
+            request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
             return;
         }
 
@@ -38,7 +39,7 @@ public class DoctorDashboardServlet extends HttpServlet {
         String statusFilter = request.getParameter("statusFilter");
         String searchPatient = request.getParameter("searchPatient");
         String todayParam = request.getParameter("today");
-        String dateFilter = request.getParameter("dateFilter"); // Thêm tham số dateFilter
+        String dateFilter = request.getParameter("dateFilter"); 
         boolean showToday = "true".equals(todayParam);
         int page = 1;
         
@@ -53,20 +54,18 @@ public class DoctorDashboardServlet extends HttpServlet {
         int totalAppointments;
         
         if (showToday) {
-            LocalDate today = LocalDate.now(); // 2025-03-25
+            LocalDate today = LocalDate.now(); 
             appointments = appointmentService.getAppointmentsByDoctorIdAndDate(
                 doctorId, today.toString(), statusFilter, searchPatient, page, PAGE_SIZE);
             totalAppointments = appointmentService.getAppointmentsCountByDoctorIdAndDate(
                 doctorId, today.toString(), statusFilter, searchPatient);
             request.setAttribute("showingToday", true);
         } else if (dateFilter != null && !dateFilter.isEmpty()) {
-            // Lọc theo ngày được chọn từ input
             appointments = appointmentService.getAppointmentsByDoctorIdAndDate(
                 doctorId, dateFilter, statusFilter, searchPatient, page, PAGE_SIZE);
             totalAppointments = appointmentService.getAppointmentsCountByDoctorIdAndDate(
                 doctorId, dateFilter, statusFilter, searchPatient);
         } else {
-            // Hiển thị tất cả lịch khám
             appointments = appointmentService.getAppointmentsByDoctorId(
                 doctorId, statusFilter, searchPatient, page, PAGE_SIZE);
             totalAppointments = appointmentService.getAppointmentsCountByDoctorId(
@@ -82,13 +81,13 @@ public class DoctorDashboardServlet extends HttpServlet {
         request.getRequestDispatcher("DoctorDashboard.jsp").forward(request, response);
     }
 
-    // Giữ nguyên doPost và getDoctorIdByUserId
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("USER");
         if (user == null || !"doctor".equals(user.getRole())) {
-            response.sendRedirect("LoginPage.jsp");
+            request.setAttribute("ERROR", "Bạn cần đăng nhập với tư cách doctor.");
+            request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
             return;
         }
 

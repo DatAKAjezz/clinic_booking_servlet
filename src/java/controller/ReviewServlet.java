@@ -2,7 +2,9 @@ package controller;
 
 import model.Review;
 import model.User;
+import model.Patient;
 import service.ReviewService;
+import dao.PatientDAO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,13 +15,15 @@ import java.util.List;
 
 public class ReviewServlet extends HttpServlet {
     private ReviewService reviewService = new ReviewService();
+    private PatientDAO patientDAO = new PatientDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("USER");
         if (user == null || !"patient".equals(user.getRole())) {
-            response.sendRedirect("LoginPage.jsp");
+            request.setAttribute("ERROR", "Bạn cần đăng nhập với tư cách patient.");
+            request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
             return;
         }
 
@@ -43,7 +47,8 @@ public class ReviewServlet extends HttpServlet {
             throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("USER");
         if (user == null || !"patient".equals(user.getRole())) {
-            response.sendRedirect("LoginPage.jsp");
+            request.setAttribute("ERROR", "Bạn cần đăng nhập với tư cách patient.");
+            request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
             return;
         }
 
@@ -65,13 +70,20 @@ public class ReviewServlet extends HttpServlet {
             return;
         }
 
+        Patient patient = patientDAO.getPatientByUserId(user.getUserId());
+        if (patient == null) {
+            request.getSession().setAttribute("error", "Patient profile not found.");
+            response.sendRedirect("PatientDashboardServlet");
+            return;
+        }
+
         Review review = new Review(
-            0, // reviewId tự sinh
-            user.getUserId(), // patientId từ USER
+            0, 
+            patient.getPatientId(),
             doctorId,
             rating,
             comment,
-            new Date(System.currentTimeMillis()) // Ngày hiện tại
+            new Date(System.currentTimeMillis()) 
         );
 
         if (reviewService.addReview(review)) {

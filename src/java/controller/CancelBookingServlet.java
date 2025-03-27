@@ -16,24 +16,22 @@ public class CancelBookingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Kiểm tra đăng nhập và role
         User user = (User) request.getSession().getAttribute("USER");
-        if (user == null || !"patient".equals(user.getRole())) { // Hiện tại chỉ cho patient
-            response.sendRedirect("LoginPage.jsp");
+        if (user == null || !"patient".equals(user.getRole())) {
+            request.setAttribute("ERROR", "Bạn cần đăng nhập với tư cách patient.");
+            request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
             return;
         }
 
-        // Lấy appointment_id từ form
         int appointmentId;
         try {
             appointmentId = Integer.parseInt(request.getParameter("appointmentId"));
         } catch (NumberFormatException e) {
             request.setAttribute("error", "Invalid appointment ID.");
-            response.sendRedirect("PatientDashboardServlet"); // Quay lại dashboard nếu lỗi
+            response.sendRedirect("PatientDashboardServlet"); 
             return;
         }
 
-        // Hủy lịch hẹn
         int scheduleId = appointmentService.getScheduleIdByAppointmentId(appointmentId);
         if (appointmentService.cancelAppointment(appointmentId)) {
             if (scheduleId != -1 && scheduleService.updateScheduleStatus(scheduleId, "available")) {
@@ -45,7 +43,6 @@ public class CancelBookingServlet extends HttpServlet {
             request.setAttribute("error", "Failed to cancel appointment.");
         }
 
-        // Chuyển hướng về PatientDashboardServlet
         response.sendRedirect("PatientDashboardServlet");
     }
 }

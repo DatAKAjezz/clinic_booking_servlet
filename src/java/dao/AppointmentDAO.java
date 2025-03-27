@@ -15,7 +15,7 @@ public class AppointmentDAO {
     public boolean isScheduleBooked(int scheduleId, java.sql.Date appointmentDate) {
         String sql = "SELECT COUNT(*) FROM Appointments WHERE schedule_id = ? AND appointment_date = ? AND status NOT IN ('canceled')";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, scheduleId);
             ps.setDate(2, appointmentDate);
             ResultSet rs = ps.executeQuery();
@@ -40,7 +40,7 @@ public class AppointmentDAO {
                 + "WHERE a.patient_id = ? "
                 + "ORDER BY a.appointment_date DESC";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, patientId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -73,7 +73,7 @@ public class AppointmentDAO {
         String sql = "INSERT INTO Appointments (patient_id, doctor_id, schedule_id, service_id, appointment_date, reason, status, guest_name, guest_phone) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             if (appointment.getPatientId() != null) {
                 ps.setInt(1, appointment.getPatientId());
             } else {
@@ -96,7 +96,7 @@ public class AppointmentDAO {
         String sql = "UPDATE Appointments SET patient_id = ?, doctor_id = ?, schedule_id = ?, service_id = ?, "
                 + "appointment_date = ?, reason = ?, status = ?, guest_name = ?, guest_phone = ? WHERE appointment_id = ?";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             if (appointment.getPatientId() != null) {
                 ps.setInt(1, appointment.getPatientId());
             } else {
@@ -126,13 +126,13 @@ public class AppointmentDAO {
                 + "FROM Appointments a "
                 + "LEFT JOIN Patients p ON a.patient_id = p.patient_id "
                 + "JOIN Services s ON a.service_id = s.service_id "
-                + "WHERE a.doctor_id = ?"
+                + "WHERE a.doctor_id = ? AND a.isActive = 1" // Thêm điều kiện isActive
                 + (statusFilter != null && !statusFilter.isEmpty() ? " AND a.status = ?" : "")
                 + (searchPatient != null && !searchPatient.isEmpty() ? " AND (p.full_name LIKE ? OR a.guest_name LIKE ?)" : "")
                 + " ORDER BY a.appointment_date DESC "
                 + "OFFSET " + ((page - 1) * pageSize) + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             int paramIndex = 1;
             ps.setInt(paramIndex++, doctorId);
             if (statusFilter != null && !statusFilter.isEmpty()) {
@@ -179,7 +179,7 @@ public class AppointmentDAO {
                 + "JOIN Services s ON a.service_id = s.service_id "
                 + "WHERE a.appointment_id = ?";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, appointmentId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -212,11 +212,11 @@ public class AppointmentDAO {
         String sql = "SELECT COUNT(*) "
                 + "FROM Appointments a "
                 + "LEFT JOIN Patients p ON a.patient_id = p.patient_id "
-                + "WHERE a.doctor_id = ?"
+                + "WHERE a.doctor_id = ? AND a.isActive = 1" // Thêm điều kiện isActive
                 + (statusFilter != null && !statusFilter.isEmpty() ? " AND a.status = ?" : "")
                 + (searchPatient != null && !searchPatient.isEmpty() ? " AND (p.full_name LIKE ? OR a.guest_name LIKE ?)" : "");
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             int paramIndex = 1;
             ps.setInt(paramIndex++, doctorId);
             if (statusFilter != null && !statusFilter.isEmpty()) {
@@ -240,7 +240,7 @@ public class AppointmentDAO {
     public boolean cancelAppointment(int appointmentId) {
         String sql = "UPDATE Appointments SET status = 'canceled' WHERE appointment_id = ? AND status IN ('pending', 'confirmed')";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, appointmentId);
             return ps.executeUpdate() > 0;
         } catch (SQLException | ClassNotFoundException e) {
@@ -252,7 +252,7 @@ public class AppointmentDAO {
     public int getScheduleIdByAppointmentId(int appointmentId) {
         String sql = "SELECT schedule_id FROM Appointments WHERE appointment_id = ?";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, appointmentId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -276,7 +276,7 @@ public class AppointmentDAO {
                 + "WHERE a.patient_id = ? AND a.status = 'completed' "
                 + "ORDER BY a.appointment_date DESC";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, patientId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -308,7 +308,7 @@ public class AppointmentDAO {
     public boolean confirmAppointment(int appointmentId) {
         String sql = "UPDATE Appointments SET status = 'confirmed' WHERE appointment_id = ? AND status = 'pending'";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, appointmentId);
             return ps.executeUpdate() > 0;
         } catch (SQLException | ClassNotFoundException e) {
@@ -320,7 +320,7 @@ public class AppointmentDAO {
     public boolean completeAppointment(int appointmentId, String note) {
         String sql = "UPDATE Appointments SET status = 'completed', note = ? WHERE appointment_id = ? AND status = 'confirmed'";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, note);
             ps.setInt(2, appointmentId);
             return ps.executeUpdate() > 0;
@@ -346,7 +346,7 @@ public class AppointmentDAO {
                 + " ORDER BY a.appointment_date DESC "
                 + "OFFSET " + ((page - 1) * pageSize) + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             int paramIndex = 1;
             if (statusFilter != null && !statusFilter.isEmpty()) {
                 ps.setString(paramIndex++, statusFilter);
@@ -395,7 +395,7 @@ public class AppointmentDAO {
                 + (searchPatient != null && !searchPatient.isEmpty() ? " AND (p.full_name LIKE ? OR a.guest_name LIKE ?)" : "")
                 + (searchDoctor != null && !searchDoctor.isEmpty() ? " AND d.full_name LIKE ?" : "");
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             int paramIndex = 1;
             if (statusFilter != null && !statusFilter.isEmpty()) {
                 ps.setString(paramIndex++, statusFilter);
@@ -426,13 +426,13 @@ public class AppointmentDAO {
                 + "FROM Appointments a "
                 + "LEFT JOIN Patients p ON a.patient_id = p.patient_id "
                 + "JOIN Services s ON a.service_id = s.service_id "
-                + "WHERE a.doctor_id = ? AND a.appointment_date = ?"
+                + "WHERE a.doctor_id = ? AND a.appointment_date = ? AND a.isActive = 1" // Thêm điều kiện isActive
                 + (statusFilter != null && !statusFilter.isEmpty() ? " AND a.status = ?" : "")
                 + (searchPatient != null && !searchPatient.isEmpty() ? " AND (p.full_name LIKE ? OR a.guest_name LIKE ?)" : "")
                 + " ORDER BY a.appointment_date DESC "
                 + "OFFSET " + ((page - 1) * pageSize) + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             int paramIndex = 1;
             ps.setInt(paramIndex++, doctorId);
             ps.setDate(paramIndex++, java.sql.Date.valueOf(date));
@@ -478,7 +478,7 @@ public class AppointmentDAO {
                 + (statusFilter != null && !statusFilter.isEmpty() ? " AND a.status = ?" : "")
                 + (searchPatient != null && !searchPatient.isEmpty() ? " AND (p.full_name LIKE ? OR a.guest_name LIKE ?)" : "");
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             int paramIndex = 1;
             ps.setInt(paramIndex++, doctorId);
             ps.setDate(paramIndex++, java.sql.Date.valueOf(date));
@@ -516,7 +516,7 @@ public class AppointmentDAO {
                 + " ORDER BY a.appointment_date DESC "
                 + "OFFSET " + ((page - 1) * pageSize) + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             int paramIndex = 1;
             ps.setDate(paramIndex++, java.sql.Date.valueOf(date));
             if (statusFilter != null && !statusFilter.isEmpty()) {
@@ -566,7 +566,7 @@ public class AppointmentDAO {
                 + (searchPatient != null && !searchPatient.isEmpty() ? " AND (p.full_name LIKE ? OR a.guest_name LIKE ?)" : "")
                 + (searchDoctor != null && !searchDoctor.isEmpty() ? " AND d.full_name LIKE ?" : "");
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             int paramIndex = 1;
             ps.setDate(paramIndex++, java.sql.Date.valueOf(date));
             if (statusFilter != null && !statusFilter.isEmpty()) {
@@ -588,4 +588,17 @@ public class AppointmentDAO {
         }
         return 0;
     }
+
+    // Trong AppointmentDAO.java
+    public boolean deleteAppointment(int appointmentId) {
+        String sql = "UPDATE Appointments SET isActive = 0 WHERE appointment_id = ? AND isActive = 1";
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, appointmentId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException("Error deleting appointment: " + e.getMessage(), e);
+        }
+    }
+
 }

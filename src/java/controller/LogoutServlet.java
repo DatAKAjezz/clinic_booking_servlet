@@ -10,14 +10,12 @@ public class LogoutServlet extends HttpServlet {
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Remove the PrintWriter - we don't need it for a redirect
         
         HttpSession session = request.getSession(false); 
         if (session != null) {
             session.invalidate();
         }
         
-        // Send redirect
         response.sendRedirect("LoginPage.jsp"); 
     }
     

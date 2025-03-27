@@ -5,10 +5,12 @@ import model.Doctor;
 import model.Schedule;
 import model.Service;
 import model.User;
+import model.Patient;
 import service.AppointmentService;
 import service.DoctorService;
 import service.ScheduleService;
 import service.ServiceService;
+import dao.PatientDAO; // Thêm import PatientDAO
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,13 +25,14 @@ public class BookAppointmentServlet extends HttpServlet {
     private ScheduleService scheduleService = new ScheduleService();
     private ServiceService serviceService = new ServiceService();
     private AppointmentService appointmentService = new AppointmentService();
-
+    private PatientDAO patientDAO = new PatientDAO();
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("USER");
         if (user == null || !"patient".equals(user.getRole())) {
-            response.sendRedirect("LoginPage.jsp");
+            request.setAttribute("ERROR", "Bạn cần đăng nhập với tư cách patient.");
+            request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
             return;
         }
 
@@ -54,7 +57,8 @@ public class BookAppointmentServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         User user = (User) request.getSession().getAttribute("USER");
         if (user == null || !"patient".equals(user.getRole())) {
-            response.sendRedirect("LoginPage.jsp");
+            request.setAttribute("ERROR", "Bạn cần đăng nhập với tư cách patient.");
+            request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
             return;
         }
 
@@ -71,7 +75,15 @@ public class BookAppointmentServlet extends HttpServlet {
             Date appointmentDate = null;
             boolean hasError = false;
 
-            int patientId = user.getUserId();
+            int userId = user.getUserId();
+            Patient patient = patientDAO.getPatientByUserId(userId);
+            if (patient == null) {
+                request.setAttribute("error", "Không tìm thấy thông tin bệnh nhân. Vui lòng liên hệ quản trị viên.");
+                setFormAttributes(request, 0);
+                request.getRequestDispatcher("BookAppointment.jsp").forward(request, response);
+                return;
+            }
+            int patientId = patient.getPatientId(); 
 
             if (isEmptyOrDefault(doctorIdStr, "Chọn Bác Sĩ")) {
                 request.setAttribute("doctorIdError", "Bạn cần chọn một bác sĩ.");
@@ -138,8 +150,8 @@ public class BookAppointmentServlet extends HttpServlet {
                     appointmentDate,
                     reason,
                     "pending",
-                    null, // guestName
-                    null  // guestPhone
+                    null,
+                    null 
             );
 
             if (appointmentService.bookAppointment(appointment)) {

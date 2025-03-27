@@ -595,3 +595,10 @@ body {
 .text-center {
     text-align: center;
 }
+
+.service-icon img {
+    width: 100%; /* Hình ảnh lấp đầy chiều rộng */
+    height: 100%; /* Hình ảnh lấp đầy chiều cao */
+    object-fit: cover; /* Đảm bảo hình ảnh lấp đầy mà không bị méo */
+    border-radius: 8px; /* Bo góc cho hình ảnh (tùy chọn) */
+}

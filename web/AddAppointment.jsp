@@ -1,9 +1,4 @@
-<%-- 
-    Document   : AddAppointment
-    Created on : Mar 25, 2025, 11:31:44 PM
-    Author     : datdat
---%>
-
+<%@page import="model.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
@@ -14,8 +9,24 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <title>Thêm Lịch Hẹn</title>
     <link rel="stylesheet" href="<%= request.getContextPath()%>/styles/StaffDashboard.css"/>
+    <script>
+        function loadSchedules() {
+            var doctorId = document.getElementById("doctorId").value;
+            if (doctorId) {
+                window.location.href = "StaffDashboardServlet?action=loadSchedules&doctorId=" + doctorId;
+            }
+        }
+    </script>
 </head>
 <body>
+    <%
+        User u = (User) session.getAttribute("USER");
+        if (u == null || !u.getRole().equals("receptionist")) {
+            request.setAttribute("ERROR", "Bạn cần đăng nhập với tư cách receptionist để thêm lịch hẹn.");
+            request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
+        }
+    %>
+
     <div class="sidebar">
         <div class="profile">
             <div class="profile-image" style="background-image: url(data:image/jpeg;base64,${sessionScope.USER.profilePicture}); background-size: cover; background-position: center"></div>
@@ -37,17 +48,15 @@
             <button class="back-btn" onclick="window.location.href = 'StaffDashboardServlet'"><i class="bi bi-arrow-left"></i> Quay lại</button>
         </div>
 
-        <!-- Thông báo -->
         <c:if test="${not empty sessionScope.message}">
             <div class="message success"><i class="bi bi-check-circle"></i> ${sessionScope.message}</div>
             <% session.removeAttribute("message"); %>
         </c:if>
         <c:if test="${not empty sessionScope.error}">
             <div class="message error"><i class="bi bi-exclamation-circle"></i> ${sessionScope.error}</div>
-            <% session.removeAttribute("error"); %>
+            <% session.removeAttribute("error");%>
         </c:if>
 
-        <!-- Form thêm lịch hẹn -->
         <div class="appointment-form">
             <form action="StaffDashboardServlet" method="POST">
                 <input type="hidden" name="action" value="add">
@@ -65,10 +74,10 @@
                 </div>
                 <div class="form-group">
                     <label>Chọn Bác Sĩ:</label>
-                    <select name="doctorId" required>
+                    <select name="doctorId" id="doctorId" onchange="loadSchedules()" required>
                         <option value="">Chọn Bác Sĩ</option>
                         <c:forEach var="doctor" items="${doctors}">
-                            <option value="${doctor.doctorId}">${doctor.fullName} - ${doctor.specialty}</option>
+                            <option value="${doctor.doctorId}" ${doctor.doctorId eq selectedDoctorId ? 'selected' : ''}>${doctor.fullName} - ${doctor.specialty}</option>
                         </c:forEach>
                     </select>
                 </div>
@@ -77,7 +86,7 @@
                     <select name="scheduleId" required>
                         <option value="">Chọn Khung Giờ</option>
                         <c:forEach var="schedule" items="${schedules}">
-                            <option value="${schedule.scheduleId}">${schedule.startTime} - ${schedule.endTime}</option>
+                            <option value="${schedule.scheduleId}">${schedule.startTime} - ${schedule.endTime} (${schedule.status})</option>
                         </c:forEach>
                     </select>
                 </div>

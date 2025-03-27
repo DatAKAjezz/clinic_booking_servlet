@@ -1,3 +1,4 @@
+<%@page import="model.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
@@ -10,6 +11,15 @@
         <link rel="stylesheet" href="<%= request.getContextPath()%>/styles/DoctorDashboard.css"/>
     </head>
     <body>
+        
+        <%
+            User u = (User) session.getAttribute("USER");
+            if (u == null || !u.getRole().equals("doctor")) {
+                request.setAttribute("ERROR", "Bạn cần đăng nhập với tư cách doctor.");
+                request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
+            }
+        %>
+        
         <div class="sidebar">
             <div class="profile">
                 <div class="profile-image" style="background-image: url(data:image/jpeg;base64,${sessionScope.USER.profilePicture}); background-size: cover; background-position: center"></div>
@@ -102,10 +112,10 @@
                                                      appointment.status == 'canceled' ? 'text-danger' : ''}">
                                       ${appointment.status}
                                   </span>
-                            </div>
-                            <c:if test="${not empty appointment.note}">
-                                <div class="schedule-info"><i class="bi bi-journal-text"></i> Note: ${appointment.note}</div>
-                            </c:if>
+                        </div>
+                        <c:if test="${not empty appointment.note}">
+                            <div class="schedule-info"><i class="bi bi-journal-text"></i> Note: ${appointment.note}</div>
+                        </c:if>
                         </div>
                         <form action="MedicalHistoryServlet" method="GET" style="display:inline;">
                             <input type="hidden" name="patientId" value="${appointment.patientId}">

@@ -20,7 +20,8 @@ public class MedicalHistoryServlet extends HttpServlet {
             throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("USER");
         if (user == null) {
-            response.sendRedirect("LoginPage.jsp");
+            request.setAttribute("ERROR", "Bạn cần đăng nhập để truy cập trang này.");
+            request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
             return;
         }
 

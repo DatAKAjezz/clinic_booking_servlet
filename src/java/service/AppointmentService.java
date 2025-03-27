@@ -7,6 +7,7 @@ import java.util.List;
 import java.sql.Date;
 
 public class AppointmentService {
+
     private AppointmentDAO appointmentDAO = new AppointmentDAO();
 
     public boolean bookAppointment(Appointment appointment) throws SQLException, ClassNotFoundException {
@@ -14,14 +15,13 @@ public class AppointmentService {
     }
 
     public boolean updateAppointment(Appointment appointment) {
-        return appointmentDAO.updateAppointment(appointment); // Thêm phương thức mới
+        return appointmentDAO.updateAppointment(appointment);
     }
 
     public Appointment getAppointmentById(int appointmentId) {
-        return appointmentDAO.getAppointmentById(appointmentId); // Thêm phương thức mới
+        return appointmentDAO.getAppointmentById(appointmentId); 
     }
 
-    // Các phương thức hiện có giữ nguyên
     public boolean isScheduleBooked(int scheduleId, Date appointmentDate) {
         return appointmentDAO.isScheduleBooked(scheduleId, appointmentDate);
     }
@@ -73,7 +73,7 @@ public class AppointmentService {
     public int getAppointmentsCountByDoctorIdAndDate(int doctorId, String date, String statusFilter, String searchPatient) {
         return appointmentDAO.getAppointmentsCountByDoctorIdAndDate(doctorId, date, statusFilter, searchPatient);
     }
-    
+
     public List<Appointment> getAllAppointmentsByDate(String date, String statusFilter, String searchPatient, String searchDoctor, int page, int pageSize) {
         return appointmentDAO.getAllAppointmentsByDate(date, statusFilter, searchPatient, searchDoctor, page, pageSize);
     }
@@ -81,4 +81,10 @@ public class AppointmentService {
     public int getAllAppointmentsCountByDate(String date, String statusFilter, String searchPatient, String searchDoctor) {
         return appointmentDAO.getAllAppointmentsCountByDate(date, statusFilter, searchPatient, searchDoctor);
     }
+
+    // Trong AppointmentService.java
+    public boolean deleteAppointment(int appointmentId) {
+        return appointmentDAO.deleteAppointment(appointmentId);
+    }
+
 }
